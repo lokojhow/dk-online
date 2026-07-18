@@ -1,0 +1,18 @@
+DK ONLINE — VERSÃO COM GESTÃO
+
+Abra index.html.
+
+Área administrativa de demonstração:
+E-mail: admin@dkonline.com
+Senha: 123456
+
+Nesta prévia, alterações, comentários, permissões e imagens ficam salvos no navegador.
+Na versão publicada, estes dados serão conectados a um banco de dados e armazenamento em nuvem.
+
+
+ATUALIZAÇÃO CARTÕES-POSTAIS
+- Tela de cidades ampliada para computador.
+- Cada cidade ganhou uma imagem padrão em estilo cartão-postal.
+- Cartões adaptados a celular, Z Fold aberto/fechado e desktop.
+- Ícones dos atalhos foram padronizados.
+- Consulte FONTES_DAS_IMAGENS.txt antes da publicação comercial.

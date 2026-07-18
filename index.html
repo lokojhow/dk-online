@@ -1,0 +1,1204 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#040817">
+<title>DK Online</title>
+<style>
+:root{
+  --bg:#030613;--panel:#091536;--panel2:#101b3c;--panel3:#10285d;
+  --text:#f7faff;--muted:#97a8ce;--line:rgba(255,255,255,.10);
+  --yellow:#ffd21f;--blue:#1465ff;--cyan:#24c9ff;--green:#39dda5;
+  --purple:#5947ff;--danger:#ff6e82;--shadow:0 20px 60px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);
+background:radial-gradient(circle at 90% 0,rgba(20,101,255,.22),transparent 30%),linear-gradient(145deg,#02040e,#061037 62%,#030818)}
+button,input,select,a{font:inherit}button{cursor:pointer}a{text-decoration:none;color:inherit}
+.hidden{display:none!important}.muted{color:var(--muted)}.good{color:var(--green)}
+svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+.city-screen{min-height:100vh;display:grid;place-items:center;padding:24px;background:
+radial-gradient(circle at 78% 8%,rgba(36,201,255,.15),transparent 30%),linear-gradient(145deg,#020511,#071640)}
+.city-wrap{width:min(1080px,100%);text-align:center}
+.city-logo{width:min(380px,80vw);height:auto;filter:drop-shadow(0 18px 35px rgba(0,0,0,.42))}
+.city-wrap h1{font-size:clamp(36px,7vw,70px);letter-spacing:-.065em;margin:18px 0 8px}
+.city-wrap>p{max-width:780px;margin:0 auto 28px;color:#c8d4ef;line-height:1.58;font-size:clamp(15px,2vw,19px)}
+.city-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;text-align:left}
+.city-card{min-height:126px;padding:16px;border-radius:23px;border:1px solid var(--line);color:#fff;
+background:rgba(255,255,255,.05);display:flex;flex-direction:column;justify-content:space-between;transition:.2s}
+.city-card:hover{transform:translateY(-4px);background:rgba(20,101,255,.15);border-color:rgba(36,201,255,.4)}
+.pin{width:43px;height:43px;border-radius:14px;display:grid;place-items:center;background:rgba(255,210,31,.13);color:var(--yellow);font-size:20px}
+.city-card strong{font-size:19px}.city-card small{display:block;color:var(--muted);line-height:1.35;margin-top:4px}
+
+.shell{min-height:100vh}
+.desktop-nav{position:fixed;z-index:60;left:0;top:0;bottom:0;width:238px;padding:18px 14px;background:rgba(2,5,17,.95);
+border-right:1px solid var(--line);backdrop-filter:blur(18px);display:flex;flex-direction:column}
+.nav-brand{padding:5px 7px 22px}.nav-brand img{width:188px;max-width:100%;height:auto}.nav-brand small{display:block;margin-top:7px;color:var(--muted)}
+.nav-list{display:flex;flex-direction:column;gap:7px}
+.nav-btn{border:0;background:transparent;color:var(--muted);border-radius:15px;padding:13px 14px;display:flex;align-items:center;gap:12px;font-weight:800;text-align:left}
+.nav-btn:hover,.nav-btn.active{color:#fff;background:linear-gradient(90deg,rgba(20,101,255,.34),rgba(20,101,255,.02))}
+.nav-btn.change{margin-top:9px;color:#ffe377;border:1px solid rgba(255,210,31,.22);background:rgba(255,210,31,.07)}
+.nav-footer{margin-top:auto;border:1px solid var(--line);border-radius:17px;padding:13px;color:var(--muted);font-size:12px;line-height:1.45}
+
+.main{margin-left:238px;padding:18px 22px 106px}
+.topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:8px 0 15px;
+background:linear-gradient(180deg,rgba(3,6,19,.97),rgba(3,6,19,.83) 72%,transparent);backdrop-filter:blur(16px)}
+.top-left{display:flex;align-items:center;gap:12px}.mobile-logo{display:none;height:42px;width:auto}
+.topbar h1{font-size:clamp(25px,3vw,34px);letter-spacing:-.045em;margin:0}.topbar p{margin:4px 0 0;color:var(--muted)}
+.city-chip{border:1px solid var(--line);background:rgba(255,255,255,.05);color:#fff;border-radius:999px;padding:11px 14px;font-weight:800}
+.page{display:none;animation:show .2s ease}.page.active{display:block}
+@keyframes show{from{opacity:.25;transform:translateY(7px)}to{opacity:1;transform:none}}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:24px 2px 12px}
+.section-title h2{font-size:22px;margin:0}.section-title span{color:var(--muted);font-size:13px}
+.card{border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:23px;padding:19px;box-shadow:var(--shadow)}
+.btn{border:0;border-radius:14px;padding:13px 16px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.primary{background:var(--yellow);color:#0b1430}.secondary{background:rgba(255,255,255,.07);color:#fff;border:1px solid var(--line)}.danger{background:rgba(255,110,130,.14);color:#ff9cac;border:1px solid rgba(255,110,130,.2)}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+
+.city-hero{position:relative;overflow:hidden;min-height:335px;border-radius:29px;border:1px solid var(--line);background-size:cover;background-position:center;box-shadow:var(--shadow);display:flex;align-items:end}
+.city-hero:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(1,5,20,.96),rgba(3,12,42,.66) 52%,rgba(0,0,0,.12))}
+.hero-copy{position:relative;z-index:2;max-width:720px;padding:30px}.kicker{display:inline-flex;padding:7px 10px;border-radius:999px;background:rgba(255,210,31,.14);color:#ffe77c;font-size:11px;font-weight:950;text-transform:uppercase;letter-spacing:.06em}
+.hero-copy h2{font-size:clamp(35px,5vw,58px);line-height:1.02;letter-spacing:-.06em;margin:13px 0 9px}
+.hero-copy p{color:#d7e3fb;line-height:1.58;margin:0}
+.city-tabs{display:flex;gap:8px;overflow:auto;padding:1px 1px 10px;scrollbar-width:none}.city-tabs::-webkit-scrollbar{display:none}
+.city-tab{white-space:nowrap;border:1px solid var(--line);background:rgba(255,255,255,.045);color:var(--muted);border-radius:999px;padding:9px 13px;font-weight:800}
+.city-tab.active{background:var(--yellow);color:#08112b;border-color:var(--yellow)}
+
+.promo{position:relative;overflow:hidden;border-radius:25px;border:1px solid var(--line);background:linear-gradient(120deg,#071b61,#0c6fe5);box-shadow:var(--shadow)}
+.promo-track{display:flex;transition:transform .55s ease}
+.promo-slide{min-width:100%;min-height:270px;padding:26px 70px 42px 26px;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:18px}
+.promo-slide:nth-child(2){background:linear-gradient(120deg,#071347,#143ca5)}.promo-slide:nth-child(3){background:linear-gradient(120deg,#11133f,#31287f)}
+.promo-copy h3{font-size:clamp(27px,4vw,43px);line-height:1.04;letter-spacing:-.05em;margin:11px 0 8px}.promo-copy p{color:#d9e4fb;line-height:1.55;margin:0}
+.promo-side{justify-self:end;width:min(300px,100%);padding:20px;border-radius:22px;background:rgba(1,6,26,.43);border:1px solid rgba(255,255,255,.15);text-align:center}
+.promo-side img{max-width:100%;max-height:130px;object-fit:contain}.promo-side strong{display:block;color:var(--yellow);font-size:36px;letter-spacing:-.05em;margin-top:8px}
+.arrow{position:absolute;z-index:4;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(1,6,26,.5);color:#fff;font-size:21px}.arrow.prev{left:10px}.arrow.next{right:10px}
+.dots{position:absolute;z-index:5;left:25px;bottom:14px;display:flex;gap:7px}.dot{width:8px;height:8px;border:0;padding:0;border-radius:999px;background:rgba(255,255,255,.38)}.dot.active{width:24px;background:var(--yellow)}
+
+.home-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:13px}.home-action{border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:20px;padding:17px}
+.home-action h3{margin:11px 0 5px;font-size:17px}.home-action p{margin:0 0 13px;color:var(--muted);font-size:13px;line-height:1.5}
+.bubble{width:43px;height:43px;border-radius:14px;display:grid;place-items:center;background:rgba(20,101,255,.2);font-size:20px}
+
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.plan{border:1px solid var(--line);background:linear-gradient(150deg,rgba(20,101,255,.12),rgba(255,255,255,.03));border-radius:22px;padding:20px}
+.plan.current{border-color:rgba(255,210,31,.48);background:linear-gradient(150deg,rgba(255,210,31,.12),rgba(20,101,255,.07))}
+.plan h3{font-size:38px;letter-spacing:-.06em;margin:8px 0}.plan h3 small{font-size:13px;color:var(--muted)}.plan-price{font-size:24px;font-weight:950;color:var(--yellow);margin:10px 0}
+.plan ul{list-style:none;padding:0;display:grid;gap:8px;color:#dce6fa;font-size:13px}.plan li:before{content:"✓";color:var(--green);font-weight:950;margin-right:8px}
+
+.speed-layout{display:grid;grid-template-columns:1fr .9fr;gap:13px}
+.gauge-card{min-height:475px;display:grid;place-items:center;text-align:center}
+.gauge{width:min(330px,82vw);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--yellow) calc(var(--progress)*1%),rgba(255,255,255,.07) 0)}
+.gauge:before{content:"";position:absolute;inset:23px;border-radius:50%;background:linear-gradient(145deg,#06102d,#0d2257);border:1px solid var(--line)}
+.gauge-inner{position:relative;z-index:2}.gauge-value{font-size:62px;font-weight:950;letter-spacing:-.075em}.gauge-unit{color:var(--muted);font-weight:800}
+.test-state{margin:10px 0 17px;color:var(--muted);min-height:20px}
+.results{display:grid;grid-template-columns:1fr 1fr;gap:10px}.result{border-radius:17px;background:rgba(255,255,255,.045);padding:15px}.result span{font-size:11px;color:var(--muted)}.result strong{display:block;font-size:25px;margin-top:7px}
+.note{border:1px solid rgba(255,210,31,.18);background:rgba(255,210,31,.07);color:#ffe997;border-radius:15px;padding:12px;font-size:12px;line-height:1.5}
+
+.device-list{display:grid;gap:9px}.device{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:13px;border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:17px}
+.device-icon{width:43px;height:43px;border-radius:14px;display:grid;place-items:center;background:rgba(20,101,255,.2)}.device small{color:var(--muted)}.signal{display:block;text-align:right;color:#76eec4;font-size:11px;margin-bottom:7px}
+.switch{width:45px;height:25px;border:0;border-radius:999px;padding:3px;background:var(--green)}.switch:before{content:"";display:block;width:19px;height:19px;border-radius:50%;background:#fff;transform:translateX(20px);transition:.2s}.switch.off{background:rgba(255,255,255,.16)}.switch.off:before{transform:none}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:flex;flex-direction:column;gap:7px}.field label{font-size:12px;font-weight:800}
+.field input,.field select{width:100%;border:1px solid var(--line);background:rgba(255,255,255,.055);color:#fff;border-radius:13px;padding:13px;outline:none}.field select option{background:#0b1942}
+.wifi-layout{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:13px}
+.qr{width:min(250px,100%);aspect-ratio:1;margin:auto;background:#fff;border-radius:17px;padding:15px;display:grid;grid-template-columns:repeat(13,1fr);gap:2px}.qr i{background:#081437}.qr i.off{background:#fff}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.metric{padding:13px;border-radius:15px;background:rgba(255,255,255,.045)}.metric span{display:block;color:var(--muted);font-size:11px}.metric strong{display:block;margin-top:6px}
+
+.support-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.steps{display:grid;gap:9px}.step{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:11px;padding:13px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+.step-num{width:31px;height:31px;border-radius:50%;display:grid;place-items:center;background:rgba(20,101,255,.2);font-weight:950}.step small{color:var(--muted)}.step.ok .step-num{background:rgba(57,221,165,.13);color:#73efc4}
+
+.mobile-nav{display:none;position:fixed;z-index:70;left:0;right:0;bottom:0;grid-template-columns:repeat(6,1fr);padding:7px 7px calc(7px + env(safe-area-inset-bottom));background:rgba(2,5,17,.97);border-top:1px solid var(--line);backdrop-filter:blur(18px)}
+.mobile-nav .nav-btn{padding:8px 3px;display:flex;flex-direction:column;gap:3px;justify-content:center;font-size:10px;border-radius:12px;text-align:center}.mobile-nav svg{width:20px;height:20px}
+.toast{position:fixed;right:17px;bottom:84px;z-index:90;max-width:calc(100vw - 34px);padding:13px 15px;border-radius:15px;background:#fff;color:#07112d;font-weight:850;box-shadow:var(--shadow);opacity:0;transform:translateY(70px);transition:.22s}.toast.show{opacity:1;transform:none}
+
+@media(max-width:899px){
+  .desktop-nav{display:none}.main{margin-left:0;padding:12px 12px 96px}
+  .mobile-nav{display:grid}.mobile-logo{display:block}
+  .top-left h1,.top-left p{display:none}.topbar{padding-top:6px}.city-chip{max-width:62vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .city-grid{grid-template-columns:repeat(2,1fr);gap:9px}.city-card{min-height:112px;padding:14px}
+  .promo-slide{grid-template-columns:1fr;min-height:390px;padding:23px 50px 43px 21px}.promo-side{justify-self:stretch;width:auto;text-align:left;display:flex;align-items:center;justify-content:space-between}.promo-side img{max-width:42%;max-height:100px}
+  .plans-grid{grid-template-columns:repeat(2,1fr)}.speed-layout,.wifi-layout,.support-grid{grid-template-columns:1fr}.home-actions{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .city-screen{padding:18px 12px}.city-wrap h1{font-size:38px}
+  .city-hero{min-height:390px}.hero-copy{padding:22px}.hero-copy h2{font-size:31px}
+  .plans-grid,.form-grid,.results,.metrics{grid-template-columns:1fr}.gauge-card{min-height:420px}
+  .mobile-nav .nav-btn span{font-size:9px}
+}
+
+/* ===== Recursos comerciais, avaliações e administração ===== */
+.top-actions{display:flex;align-items:center;gap:8px}
+.more-btn{width:43px;height:43px;border:1px solid var(--line);border-radius:50%;background:rgba(255,255,255,.055);color:#fff;font-size:21px}
+.nav-btn.link{width:100%;text-decoration:none}
+.admin-nav{color:#ffe377!important}
+.social-card{display:flex;align-items:center;gap:14px}
+.social-logo{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(145deg,#7939e8,#ff4b80,#ffcb49);font-size:24px}
+.review-home{margin-top:13px}
+.review-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.review-card{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:19px;padding:16px}
+.stars{color:var(--yellow);letter-spacing:2px}.review-card p{line-height:1.55;color:#dce6fa}.review-card small{color:var(--muted)}
+.review-layout{display:grid;grid-template-columns:.85fr 1.15fr;gap:13px}
+.textarea{width:100%;min-height:130px;resize:vertical;border:1px solid var(--line);background:rgba(255,255,255,.055);color:#fff;border-radius:13px;padding:13px;outline:none}
+.rating-select{display:flex;gap:8px;flex-wrap:wrap}.rating-select button{border:1px solid var(--line);background:rgba(255,255,255,.05);color:#8e9ec5;border-radius:12px;padding:9px 12px;font-size:20px}.rating-select button.active{color:var(--yellow);border-color:rgba(255,210,31,.45);background:rgba(255,210,31,.08)}
+
+.action-sheet{position:fixed;inset:0;z-index:110;background:rgba(0,0,0,.64);backdrop-filter:blur(7px);display:grid;align-items:end;padding:12px}
+.action-sheet-panel{width:min(520px,100%);margin:0 auto;border:1px solid var(--line);background:#081536;border-radius:24px;padding:15px;box-shadow:var(--shadow)}
+.action-sheet-panel h3{margin:3px 4px 12px}.sheet-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.sheet-action{border:1px solid var(--line);background:rgba(255,255,255,.05);color:#fff;border-radius:16px;padding:14px;text-align:left;font-weight:800}
+.sheet-action span{display:block;color:var(--muted);font-size:11px;margin-top:4px;font-weight:500}
+
+.admin-login{width:min(470px,100%);margin:5vh auto}
+.admin-login h2{font-size:28px;margin:0 0 7px}
+.admin-shell{display:grid;grid-template-columns:220px 1fr;gap:13px}
+.admin-side{align-self:start;position:sticky;top:84px}
+.admin-tabs{display:flex;flex-direction:column;gap:7px}
+.admin-tab{border:0;background:transparent;color:var(--muted);border-radius:13px;padding:12px;text-align:left;font-weight:800}
+.admin-tab.active{background:rgba(20,101,255,.23);color:#fff}
+.admin-panel{display:none}.admin-panel.active{display:block}
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.preview-box{min-height:190px;border:1px dashed rgba(255,255,255,.18);border-radius:18px;display:grid;place-items:center;overflow:hidden;background:rgba(255,255,255,.025);margin-top:10px}
+.preview-box img{width:100%;height:240px;object-fit:cover}
+.admin-table-wrap{overflow:auto}
+.admin-table{width:100%;border-collapse:collapse;font-size:12px}.admin-table th,.admin-table td{padding:10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.admin-table th{color:#b9c7e5}
+.status-pill{display:inline-flex;padding:5px 8px;border-radius:999px;font-size:10px;font-weight:900}.status-pill.pending{background:rgba(255,210,31,.12);color:#ffe17a}.status-pill.approved{background:rgba(57,221,165,.12);color:#74efc4}.status-pill.rejected{background:rgba(255,110,130,.12);color:#ff9dad}
+.permission-table label{display:flex;align-items:center;gap:7px}.permission-table input{accent-color:var(--yellow)}
+.admin-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.role-preview{display:flex;align-items:center;gap:8px}.role-preview select{border:1px solid var(--line);background:#0b1942;color:#fff;border-radius:12px;padding:9px}
+.file-label{display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:13px;padding:12px 15px;background:rgba(255,255,255,.07);border:1px solid var(--line);font-weight:850;cursor:pointer}.file-label input{display:none}
+.disabled-by-role{opacity:.45;filter:grayscale(.55)}
+.demo-badge{display:inline-flex;padding:6px 9px;border-radius:999px;background:rgba(255,210,31,.1);color:#ffe683;font-size:10px;font-weight:900}
+.user-row-actions{display:flex;gap:5px;flex-wrap:wrap}
+.small-btn{border:1px solid var(--line);background:rgba(255,255,255,.05);color:#fff;border-radius:9px;padding:6px 8px;font-size:10px}
+
+@media(max-width:899px){
+  .more-btn{display:block}
+  .review-grid{grid-template-columns:1fr}
+  .review-layout,.admin-shell,.admin-grid{grid-template-columns:1fr}
+  .admin-side{position:static}
+  .admin-tabs{display:grid;grid-template-columns:repeat(2,1fr)}
+}
+@media(min-width:900px){
+  .more-btn{display:none}
+}
+@media(max-width:560px){
+  .sheet-actions{grid-template-columns:1fr}
+}
+
+
+.pin{background:rgba(255,210,31,.08);overflow:hidden}
+.pin img{width:30px;height:30px;object-fit:contain;display:block}
+.city-meta{display:flex;gap:10px;align-items:flex-start}
+.city-meta .mini-pin{width:18px;height:18px;object-fit:contain;flex:0 0 18px;margin-top:2px}
+.icon-inline,.btn-icon{display:inline-flex;align-items:center;gap:8px}
+.icon-mark{width:18px;height:18px;display:inline-block;vertical-align:middle}
+.icon-mark svg{width:100%;height:100%;display:block}
+.icon-instagram svg{fill:url(#igGrad)}
+.icon-whatsapp svg{fill:#25D366}
+.icon-mapimg{width:18px;height:18px;object-fit:contain;display:inline-block}
+.city-chip .icon-mapimg{width:16px;height:16px}
+.nav-btn.link{display:flex;align-items:center;gap:12px}
+.sheet-action .icon-inline{font-weight:800}
+
+
+/* ===== Tela de cidades em formato cartão-postal ===== */
+.city-screen{padding:clamp(22px,3vw,50px)}
+.city-wrap{width:min(1420px,100%)}
+.city-logo{width:min(420px,72vw)}
+.city-wrap h1{margin-top:13px}
+.city-wrap>p{margin-bottom:32px}
+.city-grid{grid-template-columns:repeat(4,minmax(235px,1fr));gap:16px}
+.city-card{
+  min-height:210px;padding:0;position:relative;overflow:hidden;border-radius:25px;
+  background-size:cover!important;background-position:center!important;
+  display:block;isolation:isolate;box-shadow:0 18px 48px rgba(0,0,0,.32)
+}
+.city-card::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(180deg,rgba(2,8,29,.07) 20%,rgba(2,8,29,.88) 100%)
+}
+.city-card::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;
+  border:1px solid rgba(255,255,255,.16);pointer-events:none
+}
+.city-card:hover{transform:translateY(-7px) scale(1.012);border-color:rgba(255,212,47,.6)}
+.city-card .pin{position:absolute;top:14px;left:14px;width:45px;height:45px;background:rgba(2,8,29,.62);backdrop-filter:blur(9px);border:1px solid rgba(255,213,31,.23)}
+.city-card-copy{position:absolute;left:17px;right:17px;bottom:16px}
+.city-card strong{font-size:22px;text-shadow:0 2px 8px rgba(0,0,0,.8)}
+.city-card small{color:#e0e9ff;font-size:12px;text-shadow:0 2px 7px rgba(0,0,0,.8);margin-top:5px}
+.city-card-badge{display:inline-flex;margin-bottom:8px;padding:5px 8px;border-radius:999px;background:rgba(255,210,31,.14);color:#ffe677;font-size:9px;font-weight:900;letter-spacing:.07em}
+
+/* Hero das cidades */
+.city-hero{min-height:390px;background-position:center;background-size:cover}
+.city-hero::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);pointer-events:none}
+
+/* Ícones padronizados */
+.bubble{font-size:0}
+.bubble svg{width:23px;height:23px}
+.sheet-action>svg{width:21px;height:21px;vertical-align:middle;margin-right:8px}
+.nav-standard-icon{width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center}
+.nav-standard-icon svg{width:100%;height:100%}
+
+@media(max-width:1180px){
+  .city-grid{grid-template-columns:repeat(3,minmax(220px,1fr))}
+}
+@media(max-width:899px){
+  .city-wrap{width:min(760px,100%)}
+  .city-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+  .city-card{min-height:175px}
+  .city-card strong{font-size:18px}
+}
+@media(max-width:460px){
+  .city-grid{gap:9px}
+  .city-card{min-height:158px;border-radius:20px}
+  .city-card .pin{width:39px;height:39px;top:10px;left:10px}
+  .city-card .pin img{width:26px;height:26px}
+  .city-card-copy{left:12px;right:12px;bottom:12px}
+  .city-card strong{font-size:16px}
+  .city-card small{font-size:10px}
+}
+
+
+.cloud-status{position:fixed;left:252px;bottom:16px;z-index:80;display:flex;align-items:center;gap:7px;padding:8px 11px;border-radius:999px;background:rgba(2,5,17,.92);border:1px solid rgba(255,255,255,.11);font-size:11px;color:#b7c6e6;backdrop-filter:blur(12px)}
+.cloud-dot{width:8px;height:8px;border-radius:50%;background:#ffcf32}
+.cloud-status.online .cloud-dot{background:#39dda5}.cloud-status.error .cloud-dot{background:#ff6e82}
+@media(max-width:899px){.cloud-status{left:10px;bottom:82px}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+<defs>
+  <linearGradient id="igGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#feda75"/>
+    <stop offset="35%" stop-color="#fa7e1e"/>
+    <stop offset="65%" stop-color="#d62976"/>
+    <stop offset="100%" stop-color="#4f5bd5"/>
+  </linearGradient>
+</defs>
+
+<symbol id="home" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></symbol>
+<symbol id="plans" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></symbol>
+<symbol id="test" viewBox="0 0 24 24"><path d="M4 19a8 8 0 1 1 16 0"/><path d="m12 13 4-4"/></symbol>
+<symbol id="devices" viewBox="0 0 24 24"><rect x="3" y="5" width="13" height="10" rx="2"/><rect x="17" y="9" width="4" height="9" rx="1"/></symbol>
+<symbol id="wifi" viewBox="0 0 24 24"><path d="M4 11a12 12 0 0 1 16 0"/><path d="M7 15a7 7 0 0 1 10 0"/><path d="M12 19h.01"/></symbol>
+<symbol id="support" viewBox="0 0 24 24"><path d="M4 13v-2a8 8 0 0 1 16 0v2"/><path d="M4 13h3v6H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 1-2ZM20 13h-3v6h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-1-2Z"/></symbol>
+
+<symbol id="reviews" viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4Z"/><path d="m9 10 2 2 4-4"/></symbol>
+<symbol id="admin" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M5 21a7 7 0 0 1 14 0"/><path d="M18 4h3v3"/></symbol>
+<symbol id="map" viewBox="0 0 24 24"><path d="M12 21s7-5.2 7-12a7 7 0 1 0-14 0c0 6.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2"/></symbol>
+
+</svg>
+
+<section id="cityScreen" class="city-screen">
+  <div class="city-wrap">
+    <img class="city-logo" src="assets/dk.png" alt="DK Telecom">
+    <h1>Qual é a sua cidade?</h1>
+    <p>Escolha sua localidade para acessar as ofertas, o atendimento e as informações da DK Telecom mais perto de você.</p>
+    <div id="cityGrid" class="city-grid"></div>
+  </div>
+</section>
+
+<section id="appShell" class="shell hidden">
+  <aside class="desktop-nav">
+    <div class="nav-brand"><img src="assets/dk.png" alt="DK Telecom"><small>O provedor amigo do cliente</small></div>
+    <nav class="nav-list">
+      <button class="nav-btn active" data-page="home"><svg><use href="#home"/></svg>Início</button>
+      <button class="nav-btn" data-page="plans"><svg><use href="#plans"/></svg>Planos</button>
+      <button class="nav-btn" data-page="test"><svg><use href="#test"/></svg>Teste de conexão</button>
+      <button class="nav-btn" data-page="devices"><svg><use href="#devices"/></svg>Aparelhos conectados</button>
+      <button class="nav-btn" data-page="wifi"><svg><use href="#wifi"/></svg>Meu Wi-Fi</button>
+      <button class="nav-btn" data-page="support"><svg><use href="#support"/></svg>Suporte</button>
+      <button class="nav-btn" data-page="reviews"><svg><use href="#reviews"/></svg>Avaliações</button>
+      <a id="desktopInstagram" class="nav-btn link icon-inline" href="https://www.instagram.com/dktelecomoficial/" target="_blank" rel="noopener"><span class="icon-mark icon-instagram" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm9.75 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></span><span>Instagram</span></a>
+      <button class="nav-btn admin-nav" data-page="admin"><svg><use href="#admin"/></svg>Administração</button>
+      <button class="nav-btn change" id="desktopChange">↩ Trocar de cidade</button>
+    </nav>
+    <div class="nav-footer">DK Online<br>Internet, entretenimento e suporte.</div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="top-left">
+        <img class="mobile-logo" src="assets/dk.png" alt="DK">
+        <div><h1>DK Online</h1><p>Olá, cliente!</p></div>
+      </div>
+      <div class="top-actions">
+        <button id="topChange" class="city-chip"><img class="icon-mapimg" src="assets/pin.png" alt=""> <span id="currentCity">Tupanatinga – PE</span> · Trocar</button>
+        <button id="moreBtn" class="more-btn" aria-label="Mais opções">⋮</button>
+      </div>
+    </header>
+
+    <section id="page-home" class="page active">
+      <div class="city-tabs" id="cityTabs"></div>
+      <div id="cityHero" class="city-hero">
+        <div class="hero-copy">
+          <span class="kicker" id="cityKicker">DK Online em Tupanatinga</span>
+          <h2 id="cityTitle">Internet para Tupanatinga.</h2>
+          <p id="cityText">Planos em fibra óptica, atendimento local e suporte DK Telecom.</p>
+          <div class="actions">
+            <a id="cityWhatsapp" target="_blank" class="btn primary btn-icon">Falar no WhatsApp</a>
+            <a id="cityMaps" target="_blank" rel="noopener" class="btn secondary btn-icon">📍 Ir ao escritório</a>
+            <button data-page="plans" class="btn secondary">Ver planos</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title"><h2 id="promoHeading">Promoções em Tupanatinga</h2><span>Passam automaticamente</span></div>
+      <div class="promo">
+        <div id="promoTrack" class="promo-track">
+          <article class="promo-slide">
+            <div class="promo-copy"><span class="kicker">Internet gamer</span><h3>400 Mega para jogar sem travar</h3><p>Baixa latência, estabilidade e velocidade para jogos online, downloads e vários aparelhos.</p><div class="actions"><a class="btn primary promo-link" target="_blank">Quero essa oferta</a></div></div>
+            <div class="promo-side"><img src="assets/gamer.jpg" alt="Gamer"><strong>R$ 84,90</strong></div>
+          </article>
+          <article class="promo-slide">
+            <div class="promo-copy"><span class="kicker">DK TV</span><h3>Filmes, séries e esportes</h3><p>Mais de 200 canais, filmes e séries para aproveitar com toda a família.</p><div class="actions"><a class="btn primary promo-link" target="_blank">Conhecer DK TV</a></div></div>
+            <div class="promo-side"><img src="assets/dktv.png" alt="DK TV"><strong>R$ 9,90</strong></div>
+          </article>
+          <article class="promo-slide">
+            <div class="promo-copy"><span class="kicker">Área rural</span><h3>Conexão onde os fios não chegam</h3><p>Consulte as opções para áreas rurais, empresas e locais remotos.</p><div class="actions"><a class="btn primary promo-link" target="_blank">Consultar cobertura</a></div></div>
+            <div class="promo-side"><img src="assets/rural.jpg" alt="Área rural"><strong>Instalação grátis*</strong></div>
+          </article>
+        </div>
+        <button id="promoPrev" class="arrow prev">‹</button><button id="promoNext" class="arrow next">›</button>
+        <div id="promoDots" class="dots"></div>
+      </div>
+
+      <div class="home-actions">
+        <article class="home-action"><span class="bubble"><svg><use href="#plans"/></svg></span><h3>Planos disponíveis</h3><p>Veja as velocidades e escolha o plano para sua casa.</p><button data-page="plans" class="btn secondary">Ver planos</button></article>
+        <article class="home-action"><span class="bubble"><svg><use href="#support"/></svg></span><h3>Suporte local</h3><p>Faça o diagnóstico e fale com a unidade da cidade.</p><button data-page="support" class="btn secondary">Abrir suporte</button></article>
+        <article class="home-action"><span class="bubble"><svg><use href="#test"/></svg></span><h3>Minha DK Online</h3><p>Teste, Wi-Fi, ping e aparelhos conectados.</p><button data-page="test" class="btn primary">Usar ferramentas</button></article>
+        <article class="home-action"><span class="social-logo"><span class="icon-mark icon-instagram" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm9.75 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></span></span><h3>Instagram da DK</h3><p>Acompanhe novidades, promoções e bastidores da empresa.</p><a id="homeInstagram" class="btn secondary btn-icon" target="_blank" rel="noopener"><span class="icon-mark icon-instagram" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm9.75 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></span><span>Abrir Instagram</span></a></article>
+        <article class="home-action"><span class="bubble"><svg><use href="#reviews"/></svg></span><h3>Conte sua experiência</h3><p>Envie uma avaliação. Após a análise, ela poderá aparecer no aplicativo.</p><button data-page="reviews" class="btn secondary">Avaliar a DK</button></article>
+      </div>
+
+      <div class="review-home">
+        <div class="section-title"><h2>O que os clientes dizem</h2><button data-page="reviews" class="btn secondary">Ver avaliações</button></div>
+        <div id="homeReviews" class="review-grid"></div>
+      </div>
+    </section>
+
+    <section id="page-plans" class="page">
+      <div class="section-title"><h2>Planos DK Online</h2><span>Valores de referência</span></div>
+      <div class="plans-grid">
+        <article class="plan"><span class="kicker">Disponível</span><h3>100 <small>Mega</small></h3><div class="plan-price">R$ 49,90/mês</div><ul><li>Fibra óptica</li><li>Wi-Fi incluso*</li><li>Instalação gratuita*</li></ul><a class="btn primary plan-link" target="_blank">Tenho interesse</a></article>
+        <article class="plan current"><span class="kicker">Mais escolhido</span><h3>400 <small>Mega</small></h3><div class="plan-price">R$ 84,90/mês</div><ul><li>Ideal para jogos</li><li>Streaming em alta definição</li><li>Vários aparelhos</li></ul><a class="btn primary plan-link" target="_blank">Tenho interesse</a></article>
+        <article class="plan"><span class="kicker">Premium</span><h3>1 <small>Giga</small></h3><div class="plan-price">Consulte</div><ul><li>Velocidade máxima</li><li>Uso intenso</li><li>Experiência premium</li></ul><a class="btn primary plan-link" target="_blank">Consultar</a></article>
+        <article class="plan"><span class="kicker">DK TV</span><h3>+200 <small>canais</small></h3><div class="plan-price">A partir de R$ 9,90</div><ul><li>Filmes e séries</li><li>Esportes</li><li>Conteúdo para a família</li></ul><a class="btn primary plan-link" target="_blank">Conhecer DK TV</a></article>
+      </div>
+    </section>
+
+    <section id="page-test" class="page">
+      <div class="note">MODO DEMONSTRAÇÃO — os resultados serão reais após a integração com um servidor de medição.</div>
+      <div class="speed-layout" style="margin-top:13px">
+        <div class="card gauge-card"><div><div id="gauge" class="gauge" style="--progress:0"><div class="gauge-inner"><div id="gaugeValue" class="gauge-value">0</div><div id="gaugeUnit" class="gauge-unit">Mbps</div></div></div><div id="testState" class="test-state">Pronto para iniciar</div><button id="speedBtn" class="btn primary">▶ Iniciar teste</button></div></div>
+        <div class="card"><div class="section-title" style="margin-top:0"><h2>Resultado</h2><span id="testBadge">Aguardando</span></div><div class="results"><div class="result"><span>Download</span><strong id="download">—</strong></div><div class="result"><span>Upload</span><strong id="upload">—</strong></div><div class="result"><span>Ping</span><strong id="ping">—</strong></div><div class="result"><span>Jitter</span><strong id="jitter">—</strong></div></div><div class="section-title"><h2>Avaliação</h2></div><div id="testOpinion" class="note">Inicie o teste para avaliar sua conexão.</div></div>
+      </div>
+    </section>
+
+    <section id="page-devices" class="page">
+      <div class="section-title"><div><h2>Aparelhos conectados</h2><span>Veja quem usa sua rede e pause temporariamente.</span></div><button id="scanDevices" class="btn primary">↻ Buscar aparelhos</button></div>
+      <div class="card"><div class="section-title" style="margin-top:0"><h2>5 dispositivos online</h2><span>Atualizado agora</span></div><div id="deviceList" class="device-list"></div></div>
+    </section>
+
+    <section id="page-wifi" class="page">
+      <div class="note">A alteração real depende da integração com os roteadores por API, TR-069 ou TR-369.</div>
+      <div class="card" style="margin-top:13px"><div class="section-title" style="margin-top:0"><h2>Configurações da rede</h2><span>DK-CLIENTE</span></div><div class="form-grid"><div class="field"><label>Nome do Wi-Fi</label><input id="ssid" value="DK-CLIENTE"></div><div class="field"><label>Rede preferida</label><select><option>Automática — 2.4 e 5 GHz</option><option>Somente 2.4 GHz</option><option>Somente 5 GHz</option></select></div><div class="field"><label>Nova senha</label><input id="wifiPass" type="password" value="dkonline2026"></div><div class="field"><label>Segurança</label><select><option>WPA2/WPA3 — recomendada</option><option>WPA2</option></select></div></div><div class="actions"><button id="saveWifi" class="btn primary">Salvar alterações</button><button id="updateQr" class="btn secondary">Atualizar QR Code</button></div></div>
+      <div class="wifi-layout">
+        <div class="card"><div class="section-title" style="margin-top:0"><h2>Compartilhar Wi-Fi</h2><span>QR Code</span></div><div id="qr" class="qr"></div></div>
+        <div class="card"><div class="section-title" style="margin-top:0"><h2>Status do roteador</h2><span class="good">Online</span></div><div class="metrics"><div class="metric"><span>Sinal</span><strong class="good">Excelente</strong></div><div class="metric"><span>Tempo ligado</span><strong>12 dias</strong></div><div class="metric"><span>Conectados</span><strong>5</strong></div></div><div class="actions"><button id="restartRouter" class="btn danger">Reiniciar roteador</button></div></div>
+      </div>
+    </section>
+
+    <section id="page-support" class="page">
+      <div class="support-grid">
+        <div class="card"><div class="section-title" style="margin-top:0"><h2>Diagnóstico rápido</h2><span id="diagBadge">Pronto</span></div><div id="steps" class="steps">
+          <div class="step"><div class="step-num">1</div><div><strong>Conexão com o Wi-Fi</strong><br><small>Aguardando</small></div><span>—</span></div>
+          <div class="step"><div class="step-num">2</div><div><strong>Acesso à internet</strong><br><small>Aguardando</small></div><span>—</span></div>
+          <div class="step"><div class="step-num">3</div><div><strong>Servidor DK Telecom</strong><br><small>Aguardando</small></div><span>—</span></div>
+          <div class="step"><div class="step-num">4</div><div><strong>Qualidade do sinal</strong><br><small>Aguardando</small></div><span>—</span></div>
+        </div><div class="actions"><button id="diagnose" class="btn primary">▶ Iniciar diagnóstico</button></div></div>
+        <div class="card"><img src="assets/dk.png" alt="DK Telecom" style="width:220px;max-width:100%"><h2>Falar com a DK</h2><p class="muted">Após o diagnóstico, envie o resultado para o atendimento da cidade selecionada.</p><div class="actions">
+          <a id="supportWhatsapp" class="btn primary btn-icon" target="_blank"><span class="icon-mark icon-whatsapp" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.52 3.48A11.86 11.86 0 0 0 12.07 0C5.5 0 .15 5.35.15 11.92c0 2.1.55 4.16 1.6 5.98L0 24l6.3-1.65a11.9 11.9 0 0 0 5.77 1.47h.01c6.57 0 11.92-5.35 11.92-11.92 0-3.18-1.24-6.17-3.48-8.42ZM12.08 21.8h-.01a9.88 9.88 0 0 1-5.03-1.37l-.36-.21-3.74.98 1-3.65-.24-.38a9.87 9.87 0 0 1-1.51-5.24c0-5.45 4.44-9.89 9.9-9.89 2.64 0 5.12 1.03 6.98 2.9a9.82 9.82 0 0 1 2.9 6.98c0 5.46-4.44 9.9-9.89 9.9Zm5.42-7.42c-.3-.15-1.8-.89-2.08-.99-.28-.1-.48-.15-.68.15-.2.3-.78.99-.95 1.2-.18.2-.35.22-.65.08-.3-.15-1.26-.46-2.4-1.46-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.14-.13.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.03-.53-.08-.15-.68-1.65-.93-2.26-.25-.6-.5-.52-.68-.52h-.58c-.2 0-.53.08-.8.38-.28.3-1.06 1.04-1.06 2.54s1.08 2.96 1.24 3.16c.15.2 2.12 3.24 5.15 4.54.72.31 1.29.5 1.73.64.73.23 1.39.2 1.91.12.58-.09 1.8-.74 2.05-1.45.25-.7.25-1.3.17-1.45-.08-.14-.28-.22-.58-.37Z"/></svg></span><span>WhatsApp</span></a>
+          <a id="supportMaps" class="btn secondary btn-icon" target="_blank" rel="noopener"><img class="icon-mapimg" src="assets/pin.png" alt=""><span>Abrir no GPS</span></a>
+          <a id="supportInstagram" class="btn secondary btn-icon" target="_blank" rel="noopener"><span class="icon-mark icon-instagram" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm9.75 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></span><span>Instagram</span></a>
+          <button class="btn secondary" id="openTicket">Abrir chamado</button>
+        </div><div class="section-title"><h2>Área de cobertura</h2></div><p class="muted">Inajá, Manari, Itaíba, Negras, Tupanatinga, Jirau, Buíque e Arcoverde.</p></div>
+      </div>
+    </section>
+
+    <section id="page-reviews" class="page">
+      <div class="section-title"><div><h2>Avaliações da DK Telecom</h2><span>Os comentários passam por moderação antes de aparecer.</span></div></div>
+      <div class="review-layout">
+        <form id="reviewForm" class="card">
+          <span class="kicker">Sua opinião importa</span>
+          <h2>Conte como foi sua experiência</h2>
+          <div class="field"><label>Seu nome</label><input id="reviewName" required maxlength="50" placeholder="Digite seu nome"></div>
+          <div class="field"><label>Cidade</label><input id="reviewCity" readonly></div>
+          <div class="field"><label>Avaliação</label><div id="ratingSelect" class="rating-select"></div><input id="reviewRating" type="hidden" value="5"></div>
+          <div class="field"><label>Comentário</label><textarea id="reviewText" class="textarea" required maxlength="400" placeholder="Escreva seu comentário"></textarea></div>
+          <button id="submitReview" class="btn primary">Enviar para análise</button>
+          <p class="muted">O administrador escolhe quais comentários serão publicados.</p>
+        </form>
+        <div class="card">
+          <div class="section-title" style="margin-top:0"><h2>Comentários publicados</h2><span id="publishedCount">0 publicados</span></div>
+          <div id="publishedReviews" class="review-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-admin" class="page">
+      <div id="adminLogin" class="card admin-login">
+        <span class="demo-badge">ÁREA ADMINISTRATIVA — DEMONSTRAÇÃO</span>
+        <h2>Entrar na administração</h2>
+        <p class="muted">Entre com a conta cadastrada no Firebase Authentication. O acesso administrativo será confirmado pelo UID e pelo perfil salvo no banco.</p>
+        <form id="adminLoginForm">
+          <div class="field"><label>E-mail</label><input id="adminEmail" type="email" required placeholder="Seu e-mail do Firebase"></div>
+          <div class="field"><label>Senha</label><input id="adminPassword" type="password" required placeholder="Sua senha"></div>
+          <button class="btn primary" style="width:100%">Entrar</button>
+        </form>
+      </div>
+
+      <div id="adminArea" class="hidden">
+        <div class="admin-toolbar card">
+          <div><span class="demo-badge">PAINEL DE GESTÃO</span><h2 style="margin:7px 0 0">Administração DK Online</h2></div>
+          <div class="role-preview"><label>Visualizar aplicativo como</label><select id="rolePreview"><option value="client">Cliente</option><option value="technician">Técnico</option><option value="admin">Administrador</option></select><button id="adminLogout" class="btn danger">Sair</button></div>
+        </div>
+        <div class="admin-shell" style="margin-top:13px">
+          <aside class="card admin-side">
+            <div class="admin-tabs">
+              <button class="admin-tab active" data-admin-tab="content">Imagens e links</button>
+              <button class="admin-tab" data-admin-tab="plans">Preços dos planos</button>
+              <button class="admin-tab" data-admin-tab="users">Usuários e permissões</button>
+              <button class="admin-tab" data-admin-tab="comments">Moderar comentários</button>
+            </div>
+          </aside>
+
+          <div>
+            <section id="admin-content" class="admin-panel active">
+              <div class="admin-grid">
+                <div class="card">
+                  <h2>Imagem de cada cidade</h2>
+                  <div class="field"><label>Cidade</label><select id="adminCitySelect"></select></div>
+                  <label class="file-label">🖼 Escolher imagem<input id="cityImageInput" type="file" accept="image/*"></label>
+                  <div id="cityImagePreview" class="preview-box"><span class="muted">Nenhuma imagem selecionada</span></div>
+                  <div class="actions"><button id="saveCityImage" class="btn primary">Salvar imagem</button><button id="resetCityImage" class="btn secondary">Restaurar padrão</button></div>
+                </div>
+                <div class="card">
+                  <h2>Imagens do carrossel</h2>
+                  <div class="field"><label>Promoção</label><select id="promoImageSelect"><option value="0">Internet gamer</option><option value="1">DK TV</option><option value="2">Área rural</option></select></div>
+                  <label class="file-label">🖼 Escolher imagem<input id="promoImageInput" type="file" accept="image/*"></label>
+                  <div id="promoImagePreview" class="preview-box"><span class="muted">Nenhuma imagem selecionada</span></div>
+                  <div class="actions"><button id="savePromoImage" class="btn primary">Salvar imagem</button><button id="resetPromoImage" class="btn secondary">Restaurar padrão</button></div>
+                </div>
+                <div class="card">
+                  <h2>Links oficiais</h2>
+                  <div class="field"><label>Instagram</label><input id="instagramInput" value="https://www.instagram.com/dktelecomoficial/"></div>
+                  <button id="saveLinks" class="btn primary">Salvar link</button>
+                </div>
+                <div class="card">
+                  <h2>Como as imagens são salvas</h2>
+                  <p class="muted">Nesta demonstração, as imagens são reduzidas e salvas no próprio navegador. Na versão em nuvem, serão enviadas ao armazenamento do aplicativo e aparecerão para todos os usuários.</p>
+                </div>
+              </div>
+            </section>
+
+            <section id="admin-plans" class="admin-panel">
+              <div class="card">
+                <h2>Ajustar preços e destaques</h2>
+                <div class="admin-grid">
+                  <div class="field"><label>100 Mega</label><input id="price100" value="R$ 49,90/mês"></div>
+                  <div class="field"><label>400 Mega</label><input id="price400" value="R$ 84,90/mês"></div>
+                  <div class="field"><label>1 Giga</label><input id="price1g" value="Consulte"></div>
+                  <div class="field"><label>DK TV</label><input id="priceTv" value="A partir de R$ 9,90"></div>
+                </div>
+                <div class="actions"><button id="savePrices" class="btn primary">Salvar preços</button><button id="resetPrices" class="btn secondary">Restaurar valores</button></div>
+              </div>
+            </section>
+
+            <section id="admin-users" class="admin-panel">
+              <div class="admin-grid">
+                <form id="userForm" class="card">
+                  <h2>Cadastrar usuário</h2>
+                  <div class="field"><label>UID do Firebase Authentication</label><input id="userUid" required placeholder="Cole o UID do usuário"></div><div class="field"><label>Nome</label><input id="userName" required></div>
+                  <div class="field"><label>E-mail</label><input id="userEmail" type="email" required></div>
+                  <div class="field"><label>Perfil</label><select id="userRole"><option value="client">Cliente</option><option value="technician">Técnico</option><option value="admin">Administrador</option></select></div>
+                  <button class="btn primary">Adicionar usuário</button>
+                </form>
+                <div class="card">
+                  <h2>Usuários cadastrados</h2>
+                  <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Usuário</th><th>Perfil</th><th>Ações</th></tr></thead><tbody id="usersBody"></tbody></table></div>
+                </div>
+              </div>
+              <div class="card" style="margin-top:13px">
+                <h2>Permissões por perfil</h2>
+                <div class="admin-table-wrap"><table class="admin-table permission-table"><thead><tr><th>Permissão</th><th>Cliente</th><th>Técnico</th><th>Administrador</th></tr></thead><tbody id="permissionsBody"></tbody></table></div>
+                <div class="actions"><button id="savePermissions" class="btn primary">Salvar permissões</button><button id="resetPermissions" class="btn secondary">Restaurar padrão</button></div>
+              </div>
+            </section>
+
+            <section id="admin-comments" class="admin-panel">
+              <div class="card">
+                <div class="section-title" style="margin-top:0"><h2>Moderar comentários</h2><span>Escolha quais avaliações ficam visíveis.</span></div>
+                <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Cliente</th><th>Comentário</th><th>Status</th><th>Ações</th></tr></thead><tbody id="commentsBody"></tbody></table></div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="mobile-nav">
+    <button class="nav-btn active" data-page="home"><svg><use href="#home"/></svg><span>Início</span></button>
+    <button class="nav-btn" data-page="plans"><svg><use href="#plans"/></svg><span>Planos</span></button>
+    <button class="nav-btn" data-page="test"><svg><use href="#test"/></svg><span>Teste</span></button>
+    <button class="nav-btn" data-page="devices"><svg><use href="#devices"/></svg><span>Aparelhos</span></button>
+    <button class="nav-btn" data-page="wifi"><svg><use href="#wifi"/></svg><span>Wi-Fi</span></button>
+    <button class="nav-btn" data-page="support"><svg><use href="#support"/></svg><span>Suporte</span></button>
+  </nav>
+</section>
+
+<div id="actionSheet" class="action-sheet hidden">
+  <div class="action-sheet-panel">
+    <h3>Mais opções</h3>
+    <div class="sheet-actions">
+      <a id="sheetInstagram" class="sheet-action icon-inline" target="_blank" rel="noopener"><span class="icon-inline"><span class="icon-mark icon-instagram" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm9.75 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></span><span>Instagram</span></span><span>Acompanhe a DK Telecom</span></a>
+      <a id="sheetMaps" class="sheet-action icon-inline" target="_blank" rel="noopener"><span class="icon-inline"><img class="icon-mapimg" src="assets/pin.png" alt=""><span>Ir ao escritório</span></span><span>Abrir no GPS</span></a>
+      <button class="sheet-action" data-sheet-page="reviews"><svg><use href="#reviews"/></svg>Avaliações<span>Comentar sobre a empresa</span></button>
+      <button class="sheet-action" data-sheet-page="admin"><svg><use href="#admin"/></svg>Administração<span>Gerenciar o aplicativo</span></button>
+      <button class="sheet-action" id="sheetChangeCity"><svg><use href="#map"/></svg>Trocar de cidade<span>Selecionar outra unidade</span></button>
+      <button class="sheet-action" id="sheetClose">Fechar<span>Voltar ao aplicativo</span></button>
+    </div>
+  </div>
+</div>
+
+<div id="cloudStatus" class="cloud-status"><i class="cloud-dot"></i><span>Conectando ao Firebase...</span></div><div id="toast" class="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+import { getDatabase, ref, get, set, update, remove, onValue } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB0M6U5LtXLv4U8XIryv-v0rsKqcfaPRsE",
+  authDomain: "dk-online-3dd09.firebaseapp.com",
+  databaseURL: "https://dk-online-3dd09-default-rtdb.firebaseio.com",
+  projectId: "dk-online-3dd09",
+  storageBucket: "dk-online-3dd09.firebasestorage.app",
+  messagingSenderId: "494623671364",
+  appId: "1:494623671364:web:a156636400f3d7028ce811"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const firebaseAuth = getAuth(firebaseApp);
+const firebaseDb = getDatabase(firebaseApp);
+
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)], wait=ms=>new Promise(r=>setTimeout(r,ms));
+const cities={
+ inaja:{name:"Inajá",phone:"5587999742715",address:"Av. Cristo Rei, 202 – Centro",image:"assets/cidade-inaja.jpg"},
+ manari:{name:"Manari",phone:"5587996064834",address:"Rua Dom Pedro I, 19",image:"assets/cidade-manari.jpg"},
+ itaiba:{name:"Itaíba",phone:"5587981046731",address:"Rua Santa Cruz",image:"assets/cidade-itaiba.jpg"},
+ negras:{name:"Negras",phone:"5587981147767",address:"Rua São Cristóvão",image:"assets/cidade-negras.jpg"},
+ tupanatinga:{name:"Tupanatinga",phone:"5587999166081",address:"Av. 31 de Março, 37 – Centro",image:"assets/cidade-tupanatinga.jpg"},
+ jirau:{name:"Jirau",phone:"5587981101426",address:"Praça Coronel Antônio Rodrigues, 77",image:"assets/cidade-jirau.jpg"},
+ buique:{name:"Buíque",phone:"5587996131637",address:"Rua Apolônio Cursino Anjos, 01",image:"assets/cidade-buique.jpg"},
+ arcoverde:{name:"Arcoverde",phone:"5587999290455",address:"Av. José Severiano Freire, 280",image:"assets/cidade-arcoverde.jpg"}
+};
+let citySlug=localStorage.getItem("dk-city")||"tupanatinga", promoIndex=0, promoTimer=null, speedRunning=false;
+
+function toast(text){const e=$("#toast");e.textContent=text;e.classList.add("show");clearTimeout(window._tt);window._tt=setTimeout(()=>e.classList.remove("show"),2800)}
+function openPage(name){$$(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+name));$$(".nav-btn[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===name));window.scrollTo({top:0,behavior:"smooth"})}
+$$("[data-page]").forEach(b=>b.onclick=()=>openPage(b.dataset.page));
+
+function showChooser(){$("#appShell").classList.add("hidden");$("#cityScreen").classList.remove("hidden");window.scrollTo(0,0)}
+$("#desktopChange").onclick=showChooser;$("#topChange").onclick=showChooser;
+
+function buildCities(){
+ Object.entries(cities).forEach(([slug,c])=>{
+  const b=document.createElement("button");b.className="city-card";b.style.backgroundImage=`url("${c.image}")`;b.innerHTML=`<span class="pin"><img src="assets/pin.png" alt=""></span><span class="city-card-copy"><span class="city-card-badge">UNIDADE DK TELECOM</span><strong>${c.name}</strong><small>${c.address}</small></span>`;
+  b.onclick=()=>chooseCity(slug);$("#cityGrid").appendChild(b);
+  const t=document.createElement("button");t.className="city-tab";t.dataset.slug=slug;t.textContent=c.name;t.onclick=()=>chooseCity(slug,false);$("#cityTabs").appendChild(t);
+ });
+}
+function chooseCity(slug,enter=true){
+ citySlug=slug;localStorage.setItem("dk-city",slug);const c=cities[slug];
+ $("#currentCity").textContent=c.name+" – PE";$("#cityKicker").textContent="DK Online em "+c.name;$("#cityTitle").textContent="Internet para "+c.name+".";$("#cityText").textContent="Planos em fibra óptica, atendimento local e suporte DK Telecom em "+c.name+".";
+ $("#promoHeading").textContent="Promoções em "+c.name;
+ $("#cityHero").style.backgroundImage=`url("${c.image}")`;
+ const msg=encodeURIComponent("Olá DK Telecom de "+c.name+", quero conhecer os planos e ofertas.");
+ const link="https://wa.me/"+c.phone+"?text="+msg;
+ $("#cityWhatsapp").href=link;$("#supportWhatsapp").href=link;$$(".promo-link,.plan-link").forEach(a=>a.href=link);
+ $$(".city-tab").forEach(t=>t.classList.toggle("active",t.dataset.slug===slug));
+ if(enter){$("#cityScreen").classList.add("hidden");$("#appShell").classList.remove("hidden");openPage("home")}
+}
+
+function renderPromo(){$("#promoTrack").style.transform=`translateX(-${promoIndex*100}%)`;$$(".dot").forEach((d,i)=>d.classList.toggle("active",i===promoIndex))}
+function restartPromo(){clearInterval(promoTimer);promoTimer=setInterval(()=>{promoIndex=(promoIndex+1)%$$(".promo-slide").length;renderPromo()},4700)}
+$$(".promo-slide").forEach((_,i)=>{const d=document.createElement("button");d.className="dot"+(i===0?" active":"");d.onclick=()=>{promoIndex=i;renderPromo();restartPromo()};$("#promoDots").appendChild(d)});
+$("#promoNext").onclick=()=>{promoIndex=(promoIndex+1)%$$(".promo-slide").length;renderPromo();restartPromo()};
+$("#promoPrev").onclick=()=>{promoIndex=(promoIndex-1+$$(".promo-slide").length)%$$(".promo-slide").length;renderPromo();restartPromo()};
+restartPromo();
+
+$("#speedBtn").onclick=async()=>{
+ if(speedRunning)return;speedRunning=true;$("#speedBtn").disabled=true;$("#testBadge").textContent="Testando";
+ const phases=[["Medindo ping...",21,450,"ms"],["Medindo download...",299,1350,"Mbps"],["Medindo upload...",141,900,"Mbps"]];
+ for(const [label,target,duration,unit] of phases){
+  $("#testState").textContent=label;$("#gaugeUnit").textContent=unit;
+  for(let i=0;i<=30;i++){$("#gaugeValue").textContent=Math.round(target*i/30);$("#gauge").style.setProperty("--progress",Math.min(100,unit==="ms"?target*3:target/3));await wait(duration/30)}
+ }
+ $("#download").textContent="299.7 Mbps";$("#upload").textContent="141.2 Mbps";$("#ping").textContent="21 ms";$("#jitter").textContent="3 ms";$("#testState").textContent="Teste concluído";$("#testBadge").textContent="Excelente";$("#testOpinion").textContent="Conexão adequada para streaming em 4K, chamadas de vídeo e jogos online.";$("#speedBtn").textContent="↻ Testar novamente";$("#speedBtn").disabled=false;speedRunning=false
+};
+
+const devices=[["📱","Galaxy Z Fold 6","Este aparelho • 5 GHz","-41 dBm"],["📺","Smart TV Sala","Samsung TV • 5 GHz","-53 dBm"],["💻","Notebook","Windows • 5 GHz","-57 dBm"],["🎮","PlayStation","Console • Cabo","1 Gbps"],["📱","Celular Vânia","Android • 2.4 GHz","-64 dBm"]];
+devices.forEach(d=>{const row=document.createElement("div");row.className="device";row.innerHTML=`<div class="device-icon">${d[0]}</div><div><strong>${d[1]}</strong><br><small>${d[2]}</small></div><div><span class="signal">${d[3]}</span><button class="switch"></button></div>`;row.querySelector(".switch").onclick=e=>{e.currentTarget.classList.toggle("off");toast(e.currentTarget.classList.contains("off")?"Aparelho pausado (demonstração).":"Aparelho liberado.")};$("#deviceList").appendChild(row)});
+$("#scanDevices").onclick=async e=>{e.currentTarget.disabled=true;e.currentTarget.textContent="Buscando...";await wait(1000);e.currentTarget.disabled=false;e.currentTarget.textContent="↻ Buscar aparelhos";toast("Busca concluída: 5 aparelhos conectados.")};
+
+const qrPattern=Array.from({length:169},(_,i)=>((i*7+i*i*3+11)%13)<7);
+qrPattern.forEach(v=>{const i=document.createElement("i");if(!v)i.className="off";$("#qr").appendChild(i)});
+$("#saveWifi").onclick=()=>{if($("#wifiPass").value.length<8)return toast("A senha precisa ter pelo menos 8 caracteres.");toast("Alteração simulada com sucesso.")};
+$("#updateQr").onclick=()=>toast("QR Code atualizado.");
+$("#restartRouter").onclick=()=>toast("Reinicialização simulada.");
+
+$("#diagnose").onclick=async e=>{const steps=$$("#steps .step");e.currentTarget.disabled=true;$("#diagBadge").textContent="Verificando";for(const s of steps){s.querySelector("small").textContent="Verificando...";s.lastElementChild.textContent="•••";await wait(650);s.classList.add("ok");s.querySelector("small").textContent="Funcionando normalmente";s.lastElementChild.textContent="✓"}$("#diagBadge").textContent="Tudo certo";e.currentTarget.disabled=false;toast("Diagnóstico concluído.")};
+$("#openTicket").onclick=()=>toast("Chamado demonstrativo criado: DK-1048.");
+
+buildCities();chooseCity(citySlug,true);
+
+// ===== Configuração, avaliações e administração =====
+const STORAGE = {
+  reviews:"dk-reviews-v2", users:"dk-users-v2", permissions:"dk-permissions-v2",
+  cityImages:"dk-city-images-v2", promoImages:"dk-promo-images-v2",
+  prices:"dk-plan-prices-v2", instagram:"dk-instagram-v2",
+  adminSession:"dk-admin-session-v2", currentRole:"dk-current-role-v2"
+};
+const DEFAULT_PRICES={p100:"R$ 49,90/mês",p400:"R$ 84,90/mês",p1g:"Consulte",tv:"A partir de R$ 9,90"};
+const PERMISSION_LABELS={
+  view_plans:"Ver planos e preços",run_speed:"Executar teste de velocidade",
+  view_devices:"Ver aparelhos conectados",manage_wifi:"Alterar Wi-Fi",
+  restart_router:"Reiniciar roteador",run_diagnostics:"Executar diagnóstico técnico",
+  submit_reviews:"Enviar avaliações",manage_content:"Acessar a administração"
+};
+const DEFAULT_PERMISSIONS={
+  client:{view_plans:true,run_speed:true,view_devices:true,manage_wifi:true,restart_router:false,run_diagnostics:false,submit_reviews:true,manage_content:false},
+  technician:{view_plans:true,run_speed:true,view_devices:true,manage_wifi:true,restart_router:true,run_diagnostics:true,submit_reviews:false,manage_content:false},
+  admin:{view_plans:true,run_speed:true,view_devices:true,manage_wifi:true,restart_router:true,run_diagnostics:true,submit_reviews:true,manage_content:true}
+};
+const DEFAULT_USERS=[
+  {id:"u1",name:"Cliente demonstração",email:"cliente@dkonline.com",role:"client"},
+  {id:"u2",name:"Técnico demonstração",email:"tecnico@dkonline.com",role:"technician"},
+  {id:"u3",name:"Administrador DK",email:"admin@dkonline.com",role:"admin"}
+];
+let currentRole=localStorage.getItem(STORAGE.currentRole)||"client";
+let selectedRating=5;
+let stagedCityImage="", stagedPromoImage="";
+
+const getJSON=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}};
+const setJSON=(key,value)=>localStorage.setItem(key,JSON.stringify(value));
+const permissions=()=>getJSON(STORAGE.permissions,structuredClone(DEFAULT_PERMISSIONS));
+const can=permission=>Boolean(permissions()[currentRole]?.[permission]);
+
+function currentMapsUrl(){
+  const c=cities[citySlug];
+  return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(c.address+", "+c.name+", Pernambuco, Brasil");
+}
+function instagramUrl(){return localStorage.getItem(STORAGE.instagram)||"https://www.instagram.com/dktelecomoficial/"}
+function updateExternalLinks(){
+  const maps=currentMapsUrl(), instagram=instagramUrl();
+  ["cityMaps","supportMaps","sheetMaps"].forEach(id=>{const e=$("#"+id);if(e)e.href=maps});
+  ["desktopInstagram","homeInstagram","supportInstagram","sheetInstagram"].forEach(id=>{const e=$("#"+id);if(e)e.href=instagram});
+  $("#reviewCity").value=cities[citySlug].name;
+}
+const originalChooseCity=chooseCity;
+chooseCity=function(slug,enter=true){originalChooseCity(slug,enter);applyCityImage(slug);updateExternalLinks()};
+
+const pagePermission={plans:"view_plans",test:"run_speed",devices:"view_devices",wifi:"manage_wifi"};
+const originalOpenPage=openPage;
+openPage=function(name){
+  const required=pagePermission[name];
+  if(required&&!can(required)){toast("Este perfil não possui permissão para acessar esta área.");return}
+  originalOpenPage(name);
+  if(name==="reviews")renderReviews();
+  if(name==="admin")refreshAdmin();
+};
+
+function applyPermissions(){
+  $$(".nav-btn[data-page]").forEach(btn=>{
+    const permission=pagePermission[btn.dataset.page];
+    btn.classList.toggle("disabled-by-role",Boolean(permission&&!can(permission)));
+  });
+  $("#restartRouter").classList.toggle("disabled-by-role",!can("restart_router"));
+  $("#diagnose").classList.toggle("disabled-by-role",!can("run_diagnostics"));
+  $("#submitReview").classList.toggle("disabled-by-role",!can("submit_reviews"));
+}
+$("#restartRouter").onclick=()=>{if(!can("restart_router"))return toast("Somente técnicos e administradores podem reiniciar o roteador.");toast("Reinicialização simulada.")};
+const originalDiagnose=$("#diagnose").onclick;
+$("#diagnose").onclick=e=>{if(!can("run_diagnostics"))return toast("Seu perfil não possui permissão para executar o diagnóstico técnico.");originalDiagnose(e)};
+
+// Mais opções no celular
+$("#moreBtn").onclick=()=>$("#actionSheet").classList.remove("hidden");
+$("#sheetClose").onclick=()=>$("#actionSheet").classList.add("hidden");
+$("#actionSheet").onclick=e=>{if(e.target.id==="actionSheet")$("#actionSheet").classList.add("hidden")};
+$$("[data-sheet-page]").forEach(b=>b.onclick=()=>{$("#actionSheet").classList.add("hidden");openPage(b.dataset.sheetPage)});
+$("#sheetChangeCity").onclick=()=>{$("#actionSheet").classList.add("hidden");showChooser()};
+
+// Avaliações
+function defaultReviews(){
+ return [
+  {id:"r1",name:"Rosimere Nunes",city:"Manari",rating:5,text:"Atendimento muito bom e internet estável.",status:"approved",createdAt:Date.now()-500000},
+  {id:"r2",name:"Cliente DK",city:"Tupanatinga",rating:5,text:"A equipe resolveu meu problema com rapidez.",status:"approved",createdAt:Date.now()-300000}
+ ];
+}
+function reviews(){const value=getJSON(STORAGE.reviews,null);if(value)return value;setJSON(STORAGE.reviews,defaultReviews());return defaultReviews()}
+function stars(n){return "★".repeat(n)+"☆".repeat(5-n)}
+function renderReviews(){
+  const approved=reviews().filter(r=>r.status==="approved");
+  $("#publishedCount").textContent=approved.length+" publicados";
+  const markup=approved.length?approved.map(r=>`<article class="review-card"><div class="stars">${stars(r.rating)}</div><p>“${escapeHtml(r.text)}”</p><strong>${escapeHtml(r.name)}</strong><br><small>${escapeHtml(r.city)}</small></article>`).join(""):`<p class="muted">Ainda não há avaliações publicadas.</p>`;
+  $("#publishedReviews").innerHTML=markup;
+  $("#homeReviews").innerHTML=approved.slice(0,3).map(r=>`<article class="review-card"><div class="stars">${stars(r.rating)}</div><p>“${escapeHtml(r.text)}”</p><strong>${escapeHtml(r.name)}</strong><br><small>${escapeHtml(r.city)}</small></article>`).join("")||'<p class="muted">Ainda não há avaliações publicadas.</p>';
+}
+function escapeHtml(value=""){return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+for(let i=1;i<=5;i++){const b=document.createElement("button");b.type="button";b.textContent="★";b.dataset.rating=i;b.classList.toggle("active",i<=selectedRating);b.onclick=()=>{selectedRating=i;$("#reviewRating").value=i;$$(".rating-select button").forEach(x=>x.classList.toggle("active",+x.dataset.rating<=i))};$("#ratingSelect").appendChild(b)}
+$("#reviewForm").onsubmit=e=>{
+ e.preventDefault();
+ if(!can("submit_reviews"))return toast("Seu perfil não possui permissão para enviar avaliações.");
+ const list=reviews();list.unshift({id:"r"+Date.now(),name:$("#reviewName").value.trim(),city:cities[citySlug].name,rating:selectedRating,text:$("#reviewText").value.trim(),status:"pending",createdAt:Date.now()});
+ setJSON(STORAGE.reviews,list);e.currentTarget.reset();selectedRating=5;$("#reviewRating").value=5;$$(".rating-select button").forEach(x=>x.classList.toggle("active",+x.dataset.rating<=5));$("#reviewCity").value=cities[citySlug].name;toast("Comentário enviado para análise do administrador.");renderAdminComments()
+};
+
+// Administração
+function refreshAdmin(){
+ const logged=localStorage.getItem(STORAGE.adminSession)==="1";
+ $("#adminLogin").classList.toggle("hidden",logged);$("#adminArea").classList.toggle("hidden",!logged);
+ if(logged){renderAdminAll()}
+}
+$("#adminLoginForm").onsubmit=e=>{
+ e.preventDefault();
+ if($("#adminEmail").value.trim().toLowerCase()==="admin@dkonline.com"&&$("#adminPassword").value==="123456"){
+  localStorage.setItem(STORAGE.adminSession,"1");currentRole="admin";localStorage.setItem(STORAGE.currentRole,currentRole);refreshAdmin();applyPermissions();toast("Acesso administrativo liberado.")
+ }else toast("E-mail ou senha incorretos.")
+};
+$("#adminLogout").onclick=()=>{localStorage.removeItem(STORAGE.adminSession);currentRole="client";localStorage.setItem(STORAGE.currentRole,currentRole);refreshAdmin();applyPermissions();toast("Sessão administrativa encerrada.")};
+$$(".admin-tab").forEach(b=>b.onclick=()=>{$$(".admin-tab").forEach(x=>x.classList.toggle("active",x===b));$$(".admin-panel").forEach(p=>p.classList.toggle("active",p.id==="admin-"+b.dataset.adminTab))});
+$("#rolePreview").onchange=e=>{currentRole=e.target.value;localStorage.setItem(STORAGE.currentRole,currentRole);applyPermissions();toast("Visualização alterada para "+e.target.options[e.target.selectedIndex].text+".")};
+
+function renderAdminAll(){
+ $("#rolePreview").value=currentRole;
+ populateAdminCities();loadAdminPrices();renderUsers();renderPermissions();renderAdminComments();loadAdminLinks();refreshImagePreviews()
+}
+function populateAdminCities(){
+ $("#adminCitySelect").innerHTML=Object.entries(cities).map(([slug,c])=>`<option value="${slug}">${escapeHtml(c.name)}</option>`).join("")
+}
+function readAndResize(file,callback){
+ if(!file)return;
+ const reader=new FileReader();
+ reader.onload=()=>{
+  const img=new Image();img.onload=()=>{
+   const maxW=1600,maxH=900,scale=Math.min(1,maxW/img.width,maxH/img.height),canvas=document.createElement("canvas");
+   canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);
+   canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
+   callback(canvas.toDataURL("image/jpeg",.82))
+  };img.src=reader.result
+ };reader.readAsDataURL(file)
+}
+$("#cityImageInput").onchange=e=>readAndResize(e.target.files[0],data=>{stagedCityImage=data;$("#cityImagePreview").innerHTML=`<img src="${data}" alt="Prévia">`});
+$("#promoImageInput").onchange=e=>readAndResize(e.target.files[0],data=>{stagedPromoImage=data;$("#promoImagePreview").innerHTML=`<img src="${data}" alt="Prévia">`});
+function cityImages(){return getJSON(STORAGE.cityImages,{})}
+function promoImages(){return getJSON(STORAGE.promoImages,{})}
+function applyCityImage(slug){
+ const custom=cityImages()[slug];const c=cities[slug];
+ $("#cityHero").style.backgroundImage=custom?`url("${custom}")`:c.image?`url("${c.image}")`:"linear-gradient(125deg,#071950,#0b65c4)"
+}
+function applyPromoImages(){
+ const saved=promoImages();
+ $$(".promo-side img").forEach((img,i)=>{if(saved[i])img.src=saved[i]})
+}
+function refreshImagePreviews(){
+ const slug=$("#adminCitySelect").value||"tupanatinga",custom=cityImages()[slug],defaultImage=cities[slug].image;
+ $("#cityImagePreview").innerHTML=custom||defaultImage?`<img src="${custom||defaultImage}" alt="Imagem da cidade">`:'<span class="muted">Esta cidade usa o fundo padrão.</span>';
+ const index=+$("#promoImageSelect").value,src=promoImages()[index]||$$(".promo-side img")[index]?.src;
+ $("#promoImagePreview").innerHTML=src?`<img src="${src}" alt="Imagem da promoção">`:'<span class="muted">Nenhuma imagem</span>'
+}
+$("#adminCitySelect").onchange=refreshImagePreviews;$("#promoImageSelect").onchange=refreshImagePreviews;
+$("#saveCityImage").onclick=()=>{if(!stagedCityImage)return toast("Escolha uma imagem primeiro.");const obj=cityImages();obj[$("#adminCitySelect").value]=stagedCityImage;setJSON(STORAGE.cityImages,obj);stagedCityImage="";applyCityImage(citySlug);toast("Imagem da cidade salva.")};
+$("#resetCityImage").onclick=()=>{const obj=cityImages();delete obj[$("#adminCitySelect").value];setJSON(STORAGE.cityImages,obj);stagedCityImage="";refreshImagePreviews();applyCityImage(citySlug);toast("Imagem padrão restaurada.")};
+$("#savePromoImage").onclick=()=>{if(!stagedPromoImage)return toast("Escolha uma imagem primeiro.");const obj=promoImages();obj[+$("#promoImageSelect").value]=stagedPromoImage;setJSON(STORAGE.promoImages,obj);stagedPromoImage="";applyPromoImages();toast("Imagem da promoção salva.")};
+$("#resetPromoImage").onclick=()=>{const obj=promoImages();delete obj[+$("#promoImageSelect").value];setJSON(STORAGE.promoImages,obj);location.reload()};
+
+function planPrices(){return getJSON(STORAGE.prices,DEFAULT_PRICES)}
+function loadAdminPrices(){const p=planPrices();$("#price100").value=p.p100;$("#price400").value=p.p400;$("#price1g").value=p.p1g;$("#priceTv").value=p.tv}
+function applyPlanPrices(){
+ const p=planPrices(),cards=$$(".plan .plan-price");
+ if(cards[0])cards[0].textContent=p.p100;if(cards[1])cards[1].textContent=p.p400;if(cards[2])cards[2].textContent=p.p1g;if(cards[3])cards[3].textContent=p.tv;
+ const promoPrices=$$(".promo-side strong");if(promoPrices[0])promoPrices[0].textContent=p.p400.replace("/mês","");if(promoPrices[1])promoPrices[1].textContent=p.tv.replace("A partir de ","")
+}
+$("#savePrices").onclick=()=>{setJSON(STORAGE.prices,{p100:$("#price100").value,p400:$("#price400").value,p1g:$("#price1g").value,tv:$("#priceTv").value});applyPlanPrices();toast("Preços atualizados.")};
+$("#resetPrices").onclick=()=>{setJSON(STORAGE.prices,DEFAULT_PRICES);loadAdminPrices();applyPlanPrices();toast("Valores padrão restaurados.")};
+
+function users(){return getJSON(STORAGE.users,DEFAULT_USERS)}
+function renderUsers(){
+ $("#usersBody").innerHTML=users().map(u=>`<tr><td><strong>${escapeHtml(u.name)}</strong><br><span class="muted">${escapeHtml(u.email)}</span></td><td><select data-user-role="${u.id}"><option value="client" ${u.role==="client"?"selected":""}>Cliente</option><option value="technician" ${u.role==="technician"?"selected":""}>Técnico</option><option value="admin" ${u.role==="admin"?"selected":""}>Administrador</option></select></td><td><button class="small-btn" data-delete-user="${u.id}">Excluir</button></td></tr>`).join("");
+ $$("[data-user-role]").forEach(s=>s.onchange=()=>{const list=users(),u=list.find(x=>x.id===s.dataset.userRole);if(u)u.role=s.value;setJSON(STORAGE.users,list);toast("Perfil do usuário atualizado.")});
+ $$("[data-delete-user]").forEach(b=>b.onclick=()=>{setJSON(STORAGE.users,users().filter(u=>u.id!==b.dataset.deleteUser));renderUsers()})
+}
+$("#userForm").onsubmit=e=>{e.preventDefault();const list=users();list.push({id:"u"+Date.now(),name:$("#userName").value.trim(),email:$("#userEmail").value.trim(),role:$("#userRole").value});setJSON(STORAGE.users,list);e.currentTarget.reset();renderUsers();toast("Usuário adicionado.")};
+
+function renderPermissions(){
+ const p=permissions(),roles=["client","technician","admin"];
+ $("#permissionsBody").innerHTML=Object.entries(PERMISSION_LABELS).map(([key,label])=>`<tr><td>${label}</td>${roles.map(role=>`<td><label><input type="checkbox" data-role="${role}" data-permission="${key}" ${p[role]?.[key]?"checked":""}> Permitir</label></td>`).join("")}</tr>`).join("")
+}
+$("#savePermissions").onclick=()=>{const p={client:{},technician:{},admin:{}};$$("[data-role][data-permission]").forEach(i=>p[i.dataset.role][i.dataset.permission]=i.checked);setJSON(STORAGE.permissions,p);applyPermissions();toast("Permissões salvas.")};
+$("#resetPermissions").onclick=()=>{setJSON(STORAGE.permissions,DEFAULT_PERMISSIONS);renderPermissions();applyPermissions();toast("Permissões padrão restauradas.")};
+
+function renderAdminComments(){
+ const list=reviews();
+ $("#commentsBody").innerHTML=list.length?list.map(r=>`<tr><td><strong>${escapeHtml(r.name)}</strong><br><span class="muted">${escapeHtml(r.city)} · ${stars(r.rating)}</span></td><td>${escapeHtml(r.text)}</td><td><span class="status-pill ${r.status}">${r.status==="pending"?"Pendente":r.status==="approved"?"Aprovado":"Rejeitado"}</span></td><td class="user-row-actions"><button class="small-btn" data-comment-action="approved" data-comment-id="${r.id}">Aprovar</button><button class="small-btn" data-comment-action="rejected" data-comment-id="${r.id}">Ocultar</button><button class="small-btn" data-comment-action="delete" data-comment-id="${r.id}">Excluir</button></td></tr>`).join(""):'<tr><td colspan="4">Nenhum comentário.</td></tr>';
+ $$("[data-comment-action]").forEach(b=>b.onclick=()=>{let items=reviews();if(b.dataset.commentAction==="delete")items=items.filter(r=>r.id!==b.dataset.commentId);else{const item=items.find(r=>r.id===b.dataset.commentId);if(item)item.status=b.dataset.commentAction}setJSON(STORAGE.reviews,items);renderAdminComments();renderReviews();toast("Comentário atualizado.")})
+}
+function loadAdminLinks(){$("#instagramInput").value=instagramUrl()}
+$("#saveLinks").onclick=()=>{localStorage.setItem(STORAGE.instagram,$("#instagramInput").value.trim());updateExternalLinks();toast("Link do Instagram atualizado.")};
+
+// Inicialização dos novos recursos
+applyPromoImages();applyPlanPrices();updateExternalLinks();renderReviews();applyPermissions();refreshAdmin();
+
+
+
+// ===== FIREBASE: DADOS PÚBLICOS, LOGIN E ADMINISTRAÇÃO =====
+let firebaseUser = null;
+let firebaseRole = "client";
+let cloudPublic = {};
+let cloudUsers = {};
+let cloudRoles = {};
+let cloudReviewsPending = {};
+
+function setCloudStatus(state, text) {
+  const el = $("#cloudStatus");
+  el.classList.remove("online", "error");
+  if (state) el.classList.add(state);
+  el.querySelector("span").textContent = text;
+}
+const entries = value => Object.entries(value || {}).map(([id, item]) => ({id, ...item}));
+
+function cloudPermissionsToLocal(roles) {
+  const map = {
+    viewPlans:"view_plans", runSpeedTest:"run_speed", viewOwnDevices:"view_devices",
+    manageOwnWifi:"manage_wifi", restartRouter:"restart_router",
+    runTechnicalDiagnostics:"run_diagnostics", submitReview:"submit_reviews",
+    manageContent:"manage_content"
+  };
+  const converted = {};
+  ["client","technician","admin"].forEach(role => {
+    converted[role] = {};
+    Object.entries(map).forEach(([cloudKey, localKey]) => {
+      converted[role][localKey] = Boolean(roles?.[role]?.permissions?.[cloudKey]);
+    });
+  });
+  setJSON(STORAGE.permissions, converted);
+}
+
+function refreshCityInterface() {
+  $("#cityGrid").innerHTML = "";
+  $("#cityTabs").innerHTML = "";
+  buildCities();
+  chooseCity(citySlug, false);
+}
+function applyFirebasePublic(value) {
+  cloudPublic = value || {};
+
+  if (cloudPublic.settings?.instagram) {
+    localStorage.setItem(STORAGE.instagram, cloudPublic.settings.instagram);
+    $("#instagramInput").value = cloudPublic.settings.instagram;
+  }
+
+  Object.entries(cloudPublic.cities || {}).forEach(([slug, item]) => {
+    if (!cities[slug]) cities[slug] = {};
+    Object.assign(cities[slug], {
+      name: item.name || cities[slug].name,
+      phone: item.phone || cities[slug].phone,
+      address: item.address || cities[slug].address,
+      image: item.image || cities[slug].image
+    });
+  });
+  refreshCityInterface();
+  updateExternalLinks();
+
+  const plans = cloudPublic.plans || {};
+  const order = ["plan100","plan400","plan1g","dktv"];
+  const cards = $$(".plan");
+  order.forEach((key, index) => {
+    const plan = plans[key], card = cards[index];
+    if (!plan || !card) return;
+    const price = card.querySelector(".plan-price");
+    if (price) price.textContent = plan.price || "";
+  });
+  $("#price100").value = plans.plan100?.price || DEFAULT_PRICES.p100;
+  $("#price400").value = plans.plan400?.price || DEFAULT_PRICES.p400;
+  $("#price1g").value = plans.plan1g?.price || DEFAULT_PRICES.p1g;
+  $("#priceTv").value = plans.dktv?.price || DEFAULT_PRICES.tv;
+
+  const promos = cloudPublic.promos || {};
+  ["gamer","dktv","rural"].forEach((key, index) => {
+    const item = promos[key], slide = $$(".promo-slide")[index];
+    if (!item || !slide) return;
+    if (item.title) slide.querySelector("h3").textContent = item.title;
+    if (item.subtitle) slide.querySelector(".promo-copy p").textContent = item.subtitle;
+    if (item.price) slide.querySelector(".promo-side strong").textContent = item.price;
+    if (item.image) slide.querySelector(".promo-side img").src = item.image;
+  });
+
+  renderFirebasePublishedReviews();
+}
+function renderFirebasePublishedReviews() {
+  const list = entries(cloudPublic.reviews)
+    .filter(item => item.published === true)
+    .sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+  $("#publishedCount").textContent = `${list.length} publicados`;
+  const markup = list.length ? list.map(item => `<article class="review-card"><div class="stars">${stars(Number(item.rating)||5)}</div><p>“${escapeHtml(item.text)}”</p><strong>${escapeHtml(item.name)}</strong><br><small>${escapeHtml(item.city)}</small></article>`).join("") : '<p class="muted">Ainda não há avaliações publicadas.</p>';
+  $("#publishedReviews").innerHTML = markup;
+  $("#homeReviews").innerHTML = list.slice(0,3).map(item => `<article class="review-card"><div class="stars">${stars(Number(item.rating)||5)}</div><p>“${escapeHtml(item.text)}”</p><strong>${escapeHtml(item.name)}</strong><br><small>${escapeHtml(item.city)}</small></article>`).join("") || '<p class="muted">Ainda não há avaliações publicadas.</p>';
+}
+
+onValue(ref(firebaseDb, "public"), snap => {
+  applyFirebasePublic(snap.val());
+  setCloudStatus("online", "Firebase conectado");
+}, error => {
+  console.error(error);
+  setCloudStatus("error", "Erro ao carregar o Firebase");
+});
+
+onValue(ref(firebaseDb, "roles"), snap => {
+  cloudRoles = snap.val() || {};
+  cloudPermissionsToLocal(cloudRoles);
+  applyPermissions();
+  if (firebaseRole === "admin") renderFirebasePermissions();
+});
+
+onValue(ref(firebaseDb, "users"), snap => {
+  cloudUsers = snap.val() || {};
+  if (firebaseRole === "admin") renderFirebaseUsers();
+});
+
+onValue(ref(firebaseDb, "reviewSubmissions"), snap => {
+  cloudReviewsPending = snap.val() || {};
+  if (firebaseRole === "admin") renderFirebaseModeration();
+});
+
+async function identifyUser(user) {
+  if (!user) {
+    firebaseUser = null;
+    firebaseRole = "client";
+    currentRole = "client";
+    applyPermissions();
+    refreshAdmin();
+    return;
+  }
+  const profile = (await get(ref(firebaseDb, `users/${user.uid}`))).val();
+  if (!profile || profile.active === false) {
+    await signOut(firebaseAuth);
+    toast("Esta conta não possui acesso ativo.");
+    return;
+  }
+  firebaseUser = user;
+  firebaseRole = profile.role || "client";
+  currentRole = firebaseRole;
+  localStorage.setItem(STORAGE.currentRole, currentRole);
+  applyPermissions();
+  refreshAdmin();
+  setCloudStatus("online", `Conectado: ${profile.name || user.email}`);
+}
+onAuthStateChanged(firebaseAuth, user => identifyUser(user).catch(console.error));
+
+// A tela administrativa usa a autenticação real.
+refreshAdmin = function() {
+  const logged = Boolean(firebaseUser && firebaseRole === "admin");
+  $("#adminLogin").classList.toggle("hidden", logged);
+  $("#adminArea").classList.toggle("hidden", !logged);
+  if (logged) renderAdminAll();
+};
+
+$("#adminLoginForm").onsubmit = async event => {
+  event.preventDefault();
+  const button = event.currentTarget.querySelector("button");
+  button.disabled = true;
+  button.textContent = "Entrando...";
+  try {
+    const result = await signInWithEmailAndPassword(
+      firebaseAuth,
+      $("#adminEmail").value.trim(),
+      $("#adminPassword").value
+    );
+    const profile = (await get(ref(firebaseDb, `users/${result.user.uid}`))).val();
+    if (!profile || profile.role !== "admin" || profile.active === false) {
+      await signOut(firebaseAuth);
+      throw new Error("not-admin");
+    }
+    toast("Acesso administrativo liberado.");
+  } catch (error) {
+    console.error(error);
+    toast(error.message === "not-admin" ? "Esta conta não é administradora." : "E-mail ou senha inválidos.");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Entrar";
+  }
+};
+$("#adminLogout").onclick = async () => {
+  await signOut(firebaseAuth);
+  toast("Sessão encerrada.");
+};
+
+// Preços.
+$("#savePrices").onclick = async () => {
+  if (firebaseRole !== "admin") return toast("Entre como administrador.");
+  await update(ref(firebaseDb, "public/plans"), {
+    "plan100/price": $("#price100").value.trim(),
+    "plan400/price": $("#price400").value.trim(),
+    "plan1g/price": $("#price1g").value.trim(),
+    "dktv/price": $("#priceTv").value.trim()
+  });
+  toast("Preços publicados para todos.");
+};
+$("#resetPrices").onclick = async () => {
+  if (firebaseRole !== "admin") return toast("Entre como administrador.");
+  await update(ref(firebaseDb, "public/plans"), {
+    "plan100/price": DEFAULT_PRICES.p100,
+    "plan400/price": DEFAULT_PRICES.p400,
+    "plan1g/price": DEFAULT_PRICES.p1g,
+    "dktv/price": DEFAULT_PRICES.tv
+  });
+  toast("Preços restaurados.");
+};
+
+// Instagram.
+$("#saveLinks").onclick = async () => {
+  if (firebaseRole !== "admin") return toast("Entre como administrador.");
+  await set(ref(firebaseDb, "public/settings/instagram"), $("#instagramInput").value.trim());
+  toast("Instagram atualizado.");
+};
+
+// Imagens: compactadas e salvas no Realtime Database.
+$("#saveCityImage").onclick = async () => {
+  if (firebaseRole !== "admin") return toast("Entre como administrador.");
+  if (!stagedCityImage) return toast("Escolha uma imagem primeiro.");
+  if (stagedCityImage.length > 950000) return toast("A imagem ficou grande demais.");
+  await set(ref(firebaseDb, `public/cities/${$("#adminCitySelect").value}/image`), stagedCityImage);
+  stagedCityImage = "";
+  toast("Imagem publicada para todos.");
+};
+$("#resetCityImage").onclick = async () => {
+  const slug = $("#adminCitySelect").value;
+  const defaults = {
+    inaja:"assets/cidade-inaja.jpg", manari:"assets/cidade-manari.jpg",
+    itaiba:"assets/cidade-itaiba.jpg", negras:"assets/cidade-negras.jpg",
+    tupanatinga:"assets/cidade-tupanatinga.jpg", jirau:"assets/cidade-jirau.jpg",
+    buique:"assets/cidade-buique.jpg", arcoverde:"assets/cidade-arcoverde.jpg"
+  };
+  await set(ref(firebaseDb, `public/cities/${slug}/image`), defaults[slug]);
+  toast("Imagem padrão restaurada.");
+};
+const firebasePromoKeys = ["gamer","dktv","rural"];
+$("#savePromoImage").onclick = async () => {
+  if (firebaseRole !== "admin") return toast("Entre como administrador.");
+  if (!stagedPromoImage) return toast("Escolha uma imagem primeiro.");
+  if (stagedPromoImage.length > 950000) return toast("A imagem ficou grande demais.");
+  const key = firebasePromoKeys[Number($("#promoImageSelect").value)];
+  await set(ref(firebaseDb, `public/promos/${key}/image`), stagedPromoImage);
+  stagedPromoImage = "";
+  toast("Imagem da promoção publicada.");
+};
+
+// Perfis e permissões.
+function renderFirebaseUsers() {
+  $("#usersBody").innerHTML = entries(cloudUsers).map(user => `<tr><td><strong>${escapeHtml(user.name || "Sem nome")}</strong><br><span class="muted">${escapeHtml(user.email || user.id)}</span></td><td><select data-fb-role="${user.id}"><option value="client" ${user.role==="client"?"selected":""}>Cliente</option><option value="technician" ${user.role==="technician"?"selected":""}>Técnico</option><option value="admin" ${user.role==="admin"?"selected":""}>Administrador</option></select></td><td><button class="small-btn" data-fb-disable="${user.id}">Desativar</button></td></tr>`).join("");
+  $$("[data-fb-role]").forEach(input => input.onchange = async () => {
+    await set(ref(firebaseDb, `users/${input.dataset.fbRole}/role`), input.value);
+    toast("Perfil atualizado.");
+  });
+  $$("[data-fb-disable]").forEach(button => button.onclick = async () => {
+    await set(ref(firebaseDb, `users/${button.dataset.fbDisable}/active`), false);
+    toast("Usuário desativado.");
+  });
+}
+$("#userForm").onsubmit = async event => {
+  event.preventDefault();
+  if (firebaseRole !== "admin") return toast("Entre como administrador.");
+  const uid = $("#userUid").value.trim();
+  await set(ref(firebaseDb, `users/${uid}`), {
+    name: $("#userName").value.trim(),
+    email: $("#userEmail").value.trim(),
+    role: $("#userRole").value,
+    active: true,
+    createdAt: Date.now()
+  });
+  event.currentTarget.reset();
+  toast("Perfil cadastrado. A conta também deve existir no Authentication.");
+};
+
+const permissionLabelsCloud = {
+  viewPlans:"Ver planos e preços", runSpeedTest:"Executar teste de velocidade",
+  viewOwnDevices:"Ver aparelhos conectados", manageOwnWifi:"Alterar Wi-Fi",
+  restartRouter:"Reiniciar roteador", runTechnicalDiagnostics:"Executar diagnóstico técnico",
+  submitReview:"Enviar avaliações", openSupport:"Abrir suporte",
+  manageContent:"Gerenciar conteúdo", manageUsers:"Gerenciar usuários",
+  moderateReviews:"Moderar avaliações"
+};
+function renderFirebasePermissions() {
+  const rolesList = ["client","technician","admin"];
+  $("#permissionsBody").innerHTML = Object.entries(permissionLabelsCloud).map(([key,label]) => `<tr><td>${label}</td>${rolesList.map(role => `<td><label><input type="checkbox" data-fb-permission="${key}" data-fb-permission-role="${role}" ${cloudRoles?.[role]?.permissions?.[key]?"checked":""}> Permitir</label></td>`).join("")}</tr>`).join("");
+}
+renderPermissions = function() {
+  if (Object.keys(cloudRoles).length) renderFirebasePermissions();
+};
+$("#savePermissions").onclick = async () => {
+  if (firebaseRole !== "admin") return toast("Entre como administrador.");
+  const changes = {};
+  $$("[data-fb-permission]").forEach(input => {
+    changes[`${input.dataset.fbPermissionRole}/permissions/${input.dataset.fbPermission}`] = input.checked;
+  });
+  await update(ref(firebaseDb, "roles"), changes);
+  toast("Permissões publicadas.");
+};
+
+// Avaliações.
+function renderFirebaseModeration() {
+  const list = entries(cloudReviewsPending);
+  $("#commentsBody").innerHTML = list.length ? list.map(item => `<tr><td><strong>${escapeHtml(item.name)}</strong><br><span class="muted">${escapeHtml(item.city)} · ${stars(Number(item.rating)||5)}</span></td><td>${escapeHtml(item.text)}</td><td><span class="status-pill ${item.status || "pending"}">${item.status==="approved"?"Aprovado":item.status==="rejected"?"Rejeitado":"Pendente"}</span></td><td class="user-row-actions"><button class="small-btn" data-fb-review="approved" data-fb-review-id="${item.id}">Aprovar</button><button class="small-btn" data-fb-review="rejected" data-fb-review-id="${item.id}">Ocultar</button><button class="small-btn" data-fb-review="delete" data-fb-review-id="${item.id}">Excluir</button></td></tr>`).join("") : '<tr><td colspan="4">Nenhum comentário pendente.</td></tr>';
+  $$("[data-fb-review]").forEach(button => button.onclick = async () => {
+    const id = button.dataset.fbReviewId, action = button.dataset.fbReview;
+    const item = cloudReviewsPending[id];
+    if (action === "delete") return remove(ref(firebaseDb, `reviewSubmissions/${id}`));
+    if (action === "approved") {
+      await set(ref(firebaseDb, `public/reviews/${id}`), {
+        name:item.name, city:item.city, rating:item.rating, text:item.text,
+        published:true, createdAt:item.createdAt || Date.now()
+      });
+      await set(ref(firebaseDb, `reviewSubmissions/${id}/status`), "approved");
+    } else {
+      await set(ref(firebaseDb, `reviewSubmissions/${id}/status`), "rejected");
+      await remove(ref(firebaseDb, `public/reviews/${id}`));
+    }
+    toast("Comentário atualizado.");
+  });
+}
+renderAdminComments = function() {
+  if (firebaseRole === "admin") renderFirebaseModeration();
+};
+$("#reviewForm").onsubmit = async event => {
+  event.preventDefault();
+  if (!firebaseUser) return toast("É necessário entrar em uma conta para avaliar.");
+  const id = `${firebaseUser.uid}_${Date.now()}`;
+  await set(ref(firebaseDb, `reviewSubmissions/${id}`), {
+    uid:firebaseUser.uid, name:$("#reviewName").value.trim(),
+    city:cities[citySlug].name, rating:selectedRating,
+    text:$("#reviewText").value.trim(), status:"pending", createdAt:Date.now()
+  });
+  event.currentTarget.reset();
+  toast("Comentário enviado para análise.");
+};
+
+setCloudStatus("", "Conectando ao Firebase...");
+
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+DK ONLINE — FIREBASE + GITHUB PAGES
+
+O aplicativo já está conectado ao Firebase dk-online-3dd09.
+
+1. Crie ou abra o repositório público dk-online.
+2. Envie todo o conteúdo desta pasta para a raiz do repositório.
+3. Abra Settings > Pages.
+4. Source: Deploy from a branch.
+5. Branch: main.
+6. Folder: /(root).
+7. Clique em Save.
+
+Endereço esperado:
+https://SEU-USUARIO.github.io/dk-online/
