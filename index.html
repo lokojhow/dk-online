@@ -264,6 +264,24 @@ background:linear-gradient(180deg,rgba(3,6,19,.97),rgba(3,6,19,.83) 72%,transpar
 .cloud-dot{width:8px;height:8px;border-radius:50%;background:#ffcf32}
 .cloud-status.online .cloud-dot{background:#39dda5}.cloud-status.error .cloud-dot{background:#ff6e82}
 @media(max-width:899px){.cloud-status{left:10px;bottom:82px}}
+
+/* ===== Minha conta e autocadastro ===== */
+.account-layout{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.account-layout .card{align-self:start}
+.account-profile{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px}
+.account-avatar{width:70px;height:70px;border-radius:22px;display:grid;place-items:center;background:rgba(20,101,255,.18);color:#7dc6ff}
+.account-avatar svg{width:34px;height:34px}
+.account-profile h2{margin:7px 0 4px}
+.user-status{display:inline-flex;padding:5px 8px;border-radius:999px;font-size:10px;font-weight:900}
+.user-status.pending{background:rgba(255,210,31,.12);color:#ffe17a}
+.user-status.approved{background:rgba(57,221,165,.12);color:#74efc4}
+.user-status.deactivated{background:rgba(255,110,130,.12);color:#ff9dad}
+.approval-actions{display:flex;gap:5px;flex-wrap:wrap}
+.approve-client{border-color:rgba(57,221,165,.25)!important;color:#83f0cd!important}
+.approve-tech{border-color:rgba(36,201,255,.25)!important;color:#83ddff!important}
+@media(max-width:899px){.account-layout{grid-template-columns:1fr}}
+@media(max-width:560px){.account-profile{grid-template-columns:auto 1fr}.account-profile #clientLogout{grid-column:1/-1;width:100%}}
+
 </style>
 </head>
 <body>
@@ -288,6 +306,7 @@ background:linear-gradient(180deg,rgba(3,6,19,.97),rgba(3,6,19,.83) 72%,transpar
 <symbol id="admin" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M5 21a7 7 0 0 1 14 0"/><path d="M18 4h3v3"/></symbol>
 <symbol id="map" viewBox="0 0 24 24"><path d="M12 21s7-5.2 7-12a7 7 0 1 0-14 0c0 6.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2"/></symbol>
 
+<symbol id="account" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
 </svg>
 
 <section id="cityScreen" class="city-screen">
@@ -310,6 +329,7 @@ background:linear-gradient(180deg,rgba(3,6,19,.97),rgba(3,6,19,.83) 72%,transpar
       <button class="nav-btn" data-page="wifi"><svg><use href="#wifi"/></svg>Meu Wi-Fi</button>
       <button class="nav-btn" data-page="support"><svg><use href="#support"/></svg>Suporte</button>
       <button class="nav-btn" data-page="reviews"><svg><use href="#reviews"/></svg>Avaliações</button>
+      <button class="nav-btn" data-page="account"><svg><use href="#account"/></svg>Minha conta</button>
       <a id="desktopInstagram" class="nav-btn link icon-inline" href="https://www.instagram.com/dktelecomoficial/" target="_blank" rel="noopener"><span class="icon-mark icon-instagram" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm9.75 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></span><span>Instagram</span></a>
       <button class="nav-btn admin-nav" data-page="admin"><svg><use href="#admin"/></svg>Administração</button>
       <button class="nav-btn change" id="desktopChange">↩ Trocar de cidade</button>
@@ -447,6 +467,56 @@ background:linear-gradient(180deg,rgba(3,6,19,.97),rgba(3,6,19,.83) 72%,transpar
       </div>
     </section>
 
+
+    <section id="page-account" class="page">
+      <div class="section-title">
+        <div>
+          <h2>Minha conta DK Online</h2>
+          <span>Crie seu cadastro ou entre com uma conta existente.</span>
+        </div>
+      </div>
+
+      <div id="accountGuest" class="account-layout">
+        <form id="clientLoginForm" class="card">
+          <span class="kicker">Já tenho cadastro</span>
+          <h2>Entrar</h2>
+          <p class="muted">Use o e-mail e a senha cadastrados no DK Online.</p>
+          <div class="field"><label>E-mail</label><input id="clientLoginEmail" type="email" required autocomplete="email"></div>
+          <div class="field"><label>Senha</label><input id="clientLoginPassword" type="password" required autocomplete="current-password"></div>
+          <button class="btn primary" style="width:100%">Entrar na minha conta</button>
+        </form>
+
+        <form id="clientSignupForm" class="card">
+          <span class="kicker">Primeiro acesso</span>
+          <h2>Criar conta</h2>
+          <p class="muted">O cadastro entra como cliente e fica aguardando aprovação da DK Telecom.</p>
+          <div class="field"><label>Nome completo</label><input id="signupName" required maxlength="70" autocomplete="name"></div>
+          <div class="field"><label>Cidade</label><select id="signupCity" required></select></div>
+          <div class="field"><label>E-mail</label><input id="signupEmail" type="email" required autocomplete="email"></div>
+          <div class="field"><label>Senha</label><input id="signupPassword" type="password" required minlength="6" autocomplete="new-password"></div>
+          <div class="field"><label>Confirmar senha</label><input id="signupPasswordConfirm" type="password" required minlength="6" autocomplete="new-password"></div>
+          <button class="btn primary" style="width:100%">Criar minha conta</button>
+          <p class="muted">Depois do cadastro, o administrador poderá aprovar como cliente ou técnico.</p>
+        </form>
+      </div>
+
+      <div id="accountLogged" class="hidden">
+        <div class="account-profile card">
+          <div class="account-avatar"><svg><use href="#account"/></svg></div>
+          <div>
+            <span id="accountStatusBadge" class="status-pill pending">Aguardando</span>
+            <h2 id="accountName">Minha conta</h2>
+            <p id="accountEmail" class="muted"></p>
+            <p id="accountRoleText" class="muted"></p>
+          </div>
+          <button id="clientLogout" class="btn danger">Sair da conta</button>
+        </div>
+        <div id="accountPendingMessage" class="note" style="margin-top:13px">
+          Seu cadastro foi enviado. Aguarde a aprovação da DK Telecom.
+        </div>
+      </div>
+    </section>
+
     <section id="page-admin" class="page">
       <div id="adminLogin" class="card admin-login">
         <span class="demo-badge">ÁREA ADMINISTRATIVA — DEMONSTRAÇÃO</span>
@@ -519,14 +589,14 @@ background:linear-gradient(180deg,rgba(3,6,19,.97),rgba(3,6,19,.83) 72%,transpar
             <section id="admin-users" class="admin-panel">
               <div class="admin-grid">
                 <form id="userForm" class="card">
-                  <h2>Cadastrar usuário</h2>
+                  <h2>Cadastro manual opcional</h2><p class="muted">Normalmente o próprio usuário cria a conta. Use esta área apenas para casos especiais.</p>
                   <div class="field"><label>UID do Firebase Authentication</label><input id="userUid" required placeholder="Cole o UID do usuário"></div><div class="field"><label>Nome</label><input id="userName" required></div>
                   <div class="field"><label>E-mail</label><input id="userEmail" type="email" required></div>
                   <div class="field"><label>Perfil</label><select id="userRole"><option value="client">Cliente</option><option value="technician">Técnico</option><option value="admin">Administrador</option></select></div>
                   <button class="btn primary">Adicionar usuário</button>
                 </form>
                 <div class="card">
-                  <h2>Usuários cadastrados</h2>
+                  <h2>Cadastros e aprovações</h2><p class="muted">Aprove clientes, transforme em técnicos ou desative acessos.</p>
                   <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Usuário</th><th>Perfil</th><th>Ações</th></tr></thead><tbody id="usersBody"></tbody></table></div>
                 </div>
               </div>
@@ -567,6 +637,7 @@ background:linear-gradient(180deg,rgba(3,6,19,.97),rgba(3,6,19,.83) 72%,transpar
       <a id="sheetInstagram" class="sheet-action icon-inline" target="_blank" rel="noopener"><span class="icon-inline"><span class="icon-mark icon-instagram" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm9.75 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></span><span>Instagram</span></span><span>Acompanhe a DK Telecom</span></a>
       <a id="sheetMaps" class="sheet-action icon-inline" target="_blank" rel="noopener"><span class="icon-inline"><img class="icon-mapimg" src="assets/pin.png" alt=""><span>Ir ao escritório</span></span><span>Abrir no GPS</span></a>
       <button class="sheet-action" data-sheet-page="reviews"><svg><use href="#reviews"/></svg>Avaliações<span>Comentar sobre a empresa</span></button>
+      <button class="sheet-action" data-sheet-page="account"><svg><use href="#account"/></svg>Minha conta<span>Entrar ou criar cadastro</span></button>
       <button class="sheet-action" data-sheet-page="admin"><svg><use href="#admin"/></svg>Administração<span>Gerenciar o aplicativo</span></button>
       <button class="sheet-action" id="sheetChangeCity"><svg><use href="#map"/></svg>Trocar de cidade<span>Selecionar outra unidade</span></button>
       <button class="sheet-action" id="sheetClose">Fechar<span>Voltar ao aplicativo</span></button>
@@ -578,7 +649,7 @@ background:linear-gradient(180deg,rgba(3,6,19,.97),rgba(3,6,19,.83) 72%,transpar
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 import { getDatabase, ref, get, set, update, remove, onValue } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
 
 const firebaseConfig = {
@@ -968,47 +1039,122 @@ onValue(ref(firebaseDb, "public"), snap => {
   setCloudStatus("error", "Erro ao carregar o Firebase");
 });
 
-onValue(ref(firebaseDb, "roles"), snap => {
-  cloudRoles = snap.val() || {};
-  cloudPermissionsToLocal(cloudRoles);
-  applyPermissions();
-  if (firebaseRole === "admin") renderFirebasePermissions();
-});
+let signupInProgress = false;
+let firebaseProfile = null;
+let privateUnsubscribers = [];
 
-onValue(ref(firebaseDb, "users"), snap => {
-  cloudUsers = snap.val() || {};
-  if (firebaseRole === "admin") renderFirebaseUsers();
-});
+function stopPrivateListeners() {
+  privateUnsubscribers.forEach(unsubscribe => {
+    try { unsubscribe(); } catch {}
+  });
+  privateUnsubscribers = [];
+}
 
-onValue(ref(firebaseDb, "reviewSubmissions"), snap => {
-  cloudReviewsPending = snap.val() || {};
-  if (firebaseRole === "admin") renderFirebaseModeration();
-});
+function renderAccountState() {
+  const logged = Boolean(firebaseUser && firebaseProfile);
+  $("#accountGuest").classList.toggle("hidden", logged);
+  $("#accountLogged").classList.toggle("hidden", !logged);
+  if (!logged) return;
+
+  const approved = firebaseProfile.active === true && firebaseProfile.status !== "pending";
+  $("#accountName").textContent = firebaseProfile.name || "Minha conta";
+  $("#accountEmail").textContent = firebaseUser.email || firebaseProfile.email || "";
+  $("#accountRoleText").textContent =
+    firebaseProfile.role === "technician" ? "Perfil: Técnico" :
+    firebaseProfile.role === "admin" ? "Perfil: Administrador" :
+    "Perfil: Cliente";
+
+  const badge = $("#accountStatusBadge");
+  badge.className = "status-pill " + (approved ? "approved" : "pending");
+  badge.textContent = approved ? "Cadastro aprovado" : "Aguardando aprovação";
+  $("#accountPendingMessage").classList.toggle("hidden", approved);
+}
+
+function startPrivateListeners(user) {
+  stopPrivateListeners();
+
+  const ownProfileUnsubscribe = onValue(ref(firebaseDb, `users/${user.uid}`), snapshot => {
+    const profile = snapshot.val();
+    if (!profile) return;
+    firebaseProfile = profile;
+    firebaseRole = profile.role || "client";
+    currentRole = firebaseRole;
+    localStorage.setItem(STORAGE.currentRole, currentRole);
+    applyPermissions();
+    refreshAdmin();
+    renderAccountState();
+    setCloudStatus(
+      "online",
+      profile.active === true
+        ? `Conectado: ${profile.name || user.email}`
+        : `Cadastro aguardando aprovação: ${profile.name || user.email}`
+    );
+
+    if (firebaseRole === "admin") startAdminListeners();
+  });
+  privateUnsubscribers.push(ownProfileUnsubscribe);
+
+  const rolesUnsubscribe = onValue(ref(firebaseDb, "roles"), snapshot => {
+    cloudRoles = snapshot.val() || {};
+    cloudPermissionsToLocal(cloudRoles);
+    applyPermissions();
+    if (firebaseRole === "admin") renderFirebasePermissions();
+  });
+  privateUnsubscribers.push(rolesUnsubscribe);
+}
+
+let adminListenersStarted = false;
+function startAdminListeners() {
+  if (adminListenersStarted) return;
+  adminListenersStarted = true;
+
+  const usersUnsubscribe = onValue(ref(firebaseDb, "users"), snapshot => {
+    cloudUsers = snapshot.val() || {};
+    renderFirebaseUsers();
+  }, error => console.error(error));
+
+  const reviewsUnsubscribe = onValue(ref(firebaseDb, "reviewSubmissions"), snapshot => {
+    cloudReviewsPending = snapshot.val() || {};
+    renderFirebaseModeration();
+  }, error => console.error(error));
+
+  privateUnsubscribers.push(usersUnsubscribe, reviewsUnsubscribe);
+}
 
 async function identifyUser(user) {
+  stopPrivateListeners();
+  adminListenersStarted = false;
+
   if (!user) {
     firebaseUser = null;
+    firebaseProfile = null;
     firebaseRole = "client";
     currentRole = "client";
     applyPermissions();
     refreshAdmin();
+    renderAccountState();
+    setCloudStatus("online", "Firebase conectado");
     return;
   }
+
   const profile = (await get(ref(firebaseDb, `users/${user.uid}`))).val();
-  if (!profile || profile.active === false) {
+  if (!profile) {
     await signOut(firebaseAuth);
-    toast("Esta conta não possui acesso ativo.");
+    toast("Cadastro não encontrado no banco.");
     return;
   }
+
   firebaseUser = user;
+  firebaseProfile = profile;
   firebaseRole = profile.role || "client";
   currentRole = firebaseRole;
   localStorage.setItem(STORAGE.currentRole, currentRole);
   applyPermissions();
   refreshAdmin();
-  setCloudStatus("online", `Conectado: ${profile.name || user.email}`);
+  renderAccountState();
+  startPrivateListeners(user);
 }
-onAuthStateChanged(firebaseAuth, user => identifyUser(user).catch(console.error));
+onAuthStateChanged(firebaseAuth, user => { if (!signupInProgress) identifyUser(user).catch(console.error); });
 
 // A tela administrativa usa a autenticação real.
 refreshAdmin = function() {
@@ -1110,14 +1256,59 @@ $("#savePromoImage").onclick = async () => {
 
 // Perfis e permissões.
 function renderFirebaseUsers() {
-  $("#usersBody").innerHTML = entries(cloudUsers).map(user => `<tr><td><strong>${escapeHtml(user.name || "Sem nome")}</strong><br><span class="muted">${escapeHtml(user.email || user.id)}</span></td><td><select data-fb-role="${user.id}"><option value="client" ${user.role==="client"?"selected":""}>Cliente</option><option value="technician" ${user.role==="technician"?"selected":""}>Técnico</option><option value="admin" ${user.role==="admin"?"selected":""}>Administrador</option></select></td><td><button class="small-btn" data-fb-disable="${user.id}">Desativar</button></td></tr>`).join("");
-  $$("[data-fb-role]").forEach(input => input.onchange = async () => {
-    await set(ref(firebaseDb, `users/${input.dataset.fbRole}/role`), input.value);
-    toast("Perfil atualizado.");
-  });
-  $$("[data-fb-disable]").forEach(button => button.onclick = async () => {
-    await set(ref(firebaseDb, `users/${button.dataset.fbDisable}/active`), false);
-    toast("Usuário desativado.");
+  const list = entries(cloudUsers).sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+  $("#usersBody").innerHTML = list.map(user => {
+    const approved = user.active === true;
+    const status = approved ? "approved" : (user.status === "deactivated" ? "deactivated" : "pending");
+    const statusText = approved ? "Aprovado" : (status === "deactivated" ? "Desativado" : "Pendente");
+    const isSelf = firebaseUser && user.id === firebaseUser.uid;
+
+    return `<tr>
+      <td>
+        <strong>${escapeHtml(user.name || "Sem nome")}</strong><br>
+        <span class="muted">${escapeHtml(user.email || user.id)}</span><br>
+        <span class="user-status ${status}">${statusText}</span>
+      </td>
+      <td>
+        ${user.role === "technician" ? "Técnico" : user.role === "admin" ? "Administrador" : "Cliente"}
+      </td>
+      <td>
+        <div class="approval-actions">
+          ${!isSelf ? `
+            <button class="small-btn approve-client" data-user-action="client" data-user-id="${user.id}">Aprovar cliente</button>
+            <button class="small-btn approve-tech" data-user-action="technician" data-user-id="${user.id}">Tornar técnico</button>
+            <button class="small-btn" data-user-action="deactivate" data-user-id="${user.id}">Desativar</button>
+          ` : '<span class="muted">Administrador atual</span>'}
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
+
+  $$("[data-user-action]").forEach(button => {
+    button.onclick = async () => {
+      const uid = button.dataset.userId;
+      const action = button.dataset.userAction;
+
+      if (action === "deactivate") {
+        await update(ref(firebaseDb, `users/${uid}`), {
+          active:false,
+          status:"deactivated",
+          deactivatedAt:Date.now(),
+          deactivatedBy:firebaseUser.uid
+        });
+        toast("Usuário desativado.");
+        return;
+      }
+
+      await update(ref(firebaseDb, `users/${uid}`), {
+        role:action,
+        active:true,
+        status:"approved",
+        approvedAt:Date.now(),
+        approvedBy:firebaseUser.uid
+      });
+      toast(action === "technician" ? "Usuário aprovado como técnico." : "Usuário aprovado como cliente.");
+    };
   });
 }
 $("#userForm").onsubmit = async event => {
@@ -1129,7 +1320,10 @@ $("#userForm").onsubmit = async event => {
     email: $("#userEmail").value.trim(),
     role: $("#userRole").value,
     active: true,
-    createdAt: Date.now()
+    status: "approved",
+    createdAt: Date.now(),
+    approvedAt: Date.now(),
+    approvedBy: firebaseUser.uid
   });
   event.currentTarget.reset();
   toast("Perfil cadastrado. A conta também deve existir no Authentication.");
@@ -1186,7 +1380,7 @@ renderAdminComments = function() {
 };
 $("#reviewForm").onsubmit = async event => {
   event.preventDefault();
-  if (!firebaseUser) return toast("É necessário entrar em uma conta para avaliar.");
+  if (!firebaseUser || firebaseProfile?.active !== true) return toast("Sua conta precisa estar aprovada para enviar uma avaliação.");
   const id = `${firebaseUser.uid}_${Date.now()}`;
   await set(ref(firebaseDb, `reviewSubmissions/${id}`), {
     uid:firebaseUser.uid, name:$("#reviewName").value.trim(),
@@ -1198,6 +1392,94 @@ $("#reviewForm").onsubmit = async event => {
 };
 
 setCloudStatus("", "Conectando ao Firebase...");
+
+
+
+// ===== AUTOCADASTRO DE CLIENTES =====
+function populateSignupCities() {
+  $("#signupCity").innerHTML = Object.entries(cities)
+    .map(([slug, city]) => `<option value="${slug}">${escapeHtml(city.name)}</option>`)
+    .join("");
+  $("#signupCity").value = citySlug;
+}
+populateSignupCities();
+
+$("#clientSignupForm").onsubmit = async event => {
+  event.preventDefault();
+
+  const name = $("#signupName").value.trim();
+  const city = $("#signupCity").value;
+  const email = $("#signupEmail").value.trim().toLowerCase();
+  const password = $("#signupPassword").value;
+  const confirm = $("#signupPasswordConfirm").value;
+  const button = event.currentTarget.querySelector("button");
+
+  if (password !== confirm) return toast("As senhas não são iguais.");
+  if (password.length < 6) return toast("A senha precisa ter pelo menos 6 caracteres.");
+
+  button.disabled = true;
+  button.textContent = "Criando conta...";
+  signupInProgress = true;
+
+  try {
+    const result = await createUserWithEmailAndPassword(firebaseAuth, email, password);
+    await set(ref(firebaseDb, `users/${result.user.uid}`), {
+      name,
+      email: result.user.email || email,
+      city,
+      role: "client",
+      status: "pending",
+      active: false,
+      createdAt: Date.now()
+    });
+
+    await signOut(firebaseAuth);
+    event.currentTarget.reset();
+    $("#signupCity").value = citySlug;
+    toast("Conta criada. Agora aguarde a aprovação da DK Telecom.");
+  } catch (error) {
+    console.error(error);
+    const messages = {
+      "auth/email-already-in-use":"Este e-mail já possui uma conta.",
+      "auth/invalid-email":"Digite um e-mail válido.",
+      "auth/weak-password":"Escolha uma senha mais forte.",
+      "auth/network-request-failed":"Falha de conexão. Tente novamente."
+    };
+    toast(messages[error.code] || "Não foi possível criar a conta.");
+  } finally {
+    signupInProgress = false;
+    button.disabled = false;
+    button.textContent = "Criar minha conta";
+  }
+};
+
+$("#clientLoginForm").onsubmit = async event => {
+  event.preventDefault();
+  const button = event.currentTarget.querySelector("button");
+  button.disabled = true;
+  button.textContent = "Entrando...";
+
+  try {
+    await signInWithEmailAndPassword(
+      firebaseAuth,
+      $("#clientLoginEmail").value.trim(),
+      $("#clientLoginPassword").value
+    );
+    toast("Conta conectada.");
+  } catch (error) {
+    console.error(error);
+    toast("E-mail ou senha incorretos.");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Entrar na minha conta";
+  }
+};
+
+$("#clientLogout").onclick = async () => {
+  await signOut(firebaseAuth);
+  openPage("home");
+  toast("Você saiu da conta.");
+};
 
 </script>
 </body>
